@@ -1,0 +1,4 @@
+interface:
+  display_name: "MijiaFlow / 米家流"
+  short_description: "通过局域网安全审计、备份并控制米家中枢极客版自动化工作流"
+  default_prompt: "使用 $mijiaflow 审计米家自动化，并在任何写入前生成、校验备份和变更计划。"

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "mijiaflow": {
+      "command": "node",
+      "args": ["mcp/dist/server.js"],
+      "cwd": "."
+    }
+  }
+}

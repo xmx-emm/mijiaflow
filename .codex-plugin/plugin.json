@@ -1,0 +1,34 @@
+{
+  "name": "mijiaflow",
+  "version": "0.1.0",
+  "description": "Secure local control and auditing for Mijia Geek automations.",
+  "author": {
+    "name": "xmx-emm",
+    "url": "https://github.com/xmx-emm"
+  },
+  "homepage": "https://github.com/xmx-emm/mijiaflow#readme",
+  "repository": "https://github.com/xmx-emm/mijiaflow",
+  "license": "MIT",
+  "keywords": ["mijia", "xiaomi", "automation", "smart-home", "codex", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "MijiaFlow / 米家流",
+    "shortDescription": "Secure local control for Mijia Geek automations.",
+    "longDescription": "Audit, back up, plan, apply, verify, and roll back allowlisted Mijia Central Hub Geek Edition changes over the local network.",
+    "developerName": "xmx-emm",
+    "category": "Productivity",
+    "capabilities": [
+      "Local gateway audit",
+      "Transactional automation control",
+      "Verified backups",
+      "Rollback"
+    ],
+    "websiteURL": "https://github.com/xmx-emm/mijiaflow",
+    "defaultPrompt": [
+      "Audit my Mijia automations without changing them.",
+      "Create a verified backup and plan a safe automation change.",
+      "审计米家自动化并生成带备份与回滚的变更计划。"
+    ]
+  }
+}
