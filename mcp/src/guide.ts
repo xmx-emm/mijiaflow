@@ -1,4 +1,6 @@
 import browserWorkflow from "../../docs/browser-workflow.md";
+import layoutWorkflow from "../../docs/layout-workflow.md";
+import logDiagnosis from "../../docs/log-diagnosis.md";
 import nodeCatalog from "../../docs/node-catalog.md";
 import security from "../../docs/security.md";
 import toolWorkflows from "../../docs/tool-workflows.md";
@@ -46,6 +48,20 @@ export const GUIDE_RESOURCES: readonly GuideResource[] = [
     title: "Node Catalog",
     description: "The raw graph contract, the v1.6.1 node type inventory, and the evidence-based procedure for composing new graphs.",
     text: nodeCatalog,
+  },
+  {
+    name: "log-diagnosis",
+    uri: "mijiaflow://guide/log-diagnosis",
+    title: "Log Diagnosis",
+    description: "Evidence-based method for investigating misbehaving automations with the read tools and raw gateway logs.",
+    text: logDiagnosis,
+  },
+  {
+    name: "layout-workflow",
+    uri: "mijiaflow://guide/layout-workflow",
+    title: "Floor Plan Planning Workflow",
+    description: "Turning a floor plan image and the device inventory into reviewed, guarded automation suggestions.",
+    text: layoutWorkflow,
   },
   {
     name: "browser-workflow",

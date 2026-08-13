@@ -41,12 +41,16 @@ describe("bundled stdio server", () => {
       expect(prompts.prompts.map((prompt) => prompt.name).sort()).toEqual([
         "mijia_audit",
         "mijia_backup",
+        "mijia_diagnose",
         "mijia_guarded_change",
+        "mijia_layout_planning",
       ]);
 
       const resources = await client.listResources();
       expect(resources.resources.map((resource) => resource.uri).sort()).toEqual([
         "mijiaflow://guide/browser-workflow",
+        "mijiaflow://guide/layout-workflow",
+        "mijiaflow://guide/log-diagnosis",
         "mijiaflow://guide/node-catalog",
         "mijiaflow://guide/security",
         "mijiaflow://guide/tool-workflows",

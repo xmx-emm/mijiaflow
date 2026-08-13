@@ -1,6 +1,6 @@
 # MCP API Reference
 
-MijiaFlow exposes ten tools, three prompts, and five guide resources. There is
+MijiaFlow exposes ten tools, five prompts, and seven guide resources. There is
 no generic RPC, arbitrary method, shell, or `callAPI` interface. Tool errors use
 MCP error results and redact passcodes, session keys, pairing tokens, and
 decrypted protocol payloads where they may contain secrets. Gateway-provided
@@ -265,7 +265,7 @@ result reports the restored baseline digest and verification status.
 
 ## Prompts
 
-The server registers three prompts so clients can start a correct workflow
+The server registers five prompts so clients can start a correct workflow
 without external instructions. Each returns a single user message.
 
 | Prompt | Arguments | Purpose |
@@ -273,6 +273,8 @@ without external instructions. Each returns a single user message.
 | `mijia_audit` | `baseUrl` | Probe, pair, and inspect automations, devices, variables, and logs without changing anything. |
 | `mijia_guarded_change` | `baseUrl`, `change` | Run the full guarded write transaction for one described change. |
 | `mijia_backup` | `baseUrl`, `cloud?` | Create a verified local backup, and a verified cloud backup when `cloud` is `"cloud"`. |
+| `mijia_diagnose` | `baseUrl`, `symptom` | Investigate a misbehaving automation read-only via rule state, devices, variables, and raw logs. |
+| `mijia_layout_planning` | `baseUrl`, `focus?` | Map devices to rooms from an attached floor plan image and propose per-zone rules for review. |
 
 ## Resources
 
@@ -284,6 +286,8 @@ they are available to any client regardless of how the package was installed.
 | `mijiaflow://guide/tool-workflows` | Read filters, allowlisted operations, and opaque token handling. |
 | `mijiaflow://guide/write-transaction` | The mandatory plan, backup, confirm, apply, verify, and rollback sequence. |
 | `mijiaflow://guide/node-catalog` | The raw graph contract, node type inventory, and evidence-based composition procedure. |
+| `mijiaflow://guide/log-diagnosis` | Evidence-based method for investigating automations with raw gateway logs. |
+| `mijiaflow://guide/layout-workflow` | Floor-plan-driven planning: device-to-room mapping and per-zone rule suggestions. |
 | `mijiaflow://guide/browser-workflow` | Optional guidance for browser-capable agents. |
 | `mijiaflow://guide/security` | Trust boundaries, credential lifecycle, and enforced mutation gates. |
 

@@ -159,9 +159,12 @@ The server ships MCP-native guidance, so any client can discover the safe
 workflows without external documentation:
 
 - **Prompts:** `mijia_audit` (read-only audit), `mijia_guarded_change` (full
-  guarded write), and `mijia_backup` (verified backup).
+  guarded write), `mijia_backup` (verified backup), `mijia_diagnose`
+  (log-based troubleshooting), and `mijia_layout_planning` (floor-plan-driven
+  rule suggestions).
 - **Resources:** `mijiaflow://guide/tool-workflows`,
   `mijiaflow://guide/write-transaction`, `mijiaflow://guide/node-catalog`,
+  `mijiaflow://guide/log-diagnosis`, `mijiaflow://guide/layout-workflow`,
   `mijiaflow://guide/browser-workflow`, and `mijiaflow://guide/security`.
 - **Instructions:** the server's `initialize` result summarizes the whole
   probe → pair → read → plan → backup → confirm → apply → rollback flow.

@@ -143,9 +143,11 @@ MijiaFlow 不会把自然语言猜测直接转换成本地 API 写入。API 路�
 服务器内置 MCP 原生指引，任何客户端无需外部文档即可发现安全工作流：
 
 - **Prompts：** `mijia_audit`（只读审计）、`mijia_guarded_change`（完整受保护
-  写入）、`mijia_backup`（可校验备份）。
+  写入）、`mijia_backup`（可校验备份）、`mijia_diagnose`（基于日志的故障
+  排查）、`mijia_layout_planning`（基于户型图的规则规划）。
 - **Resources：** `mijiaflow://guide/tool-workflows`、
   `mijiaflow://guide/write-transaction`、`mijiaflow://guide/node-catalog`、
+  `mijiaflow://guide/log-diagnosis`、`mijiaflow://guide/layout-workflow`、
   `mijiaflow://guide/browser-workflow`、`mijiaflow://guide/security`。
 - **Instructions：** 服务器在 `initialize` 结果中概括完整流程：探测 → 配对 →
   读取 → 计划 → 备份 → 确认 → 执行 → 回滚。

@@ -12,10 +12,13 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   client can launch it with `npx -y mijiaflow`.
 - Server instructions in the `initialize` result describing the full probe,
   pair, read, plan, backup, confirm, apply, and rollback workflow.
-- Three MCP prompts: `mijia_audit`, `mijia_guarded_change`, and `mijia_backup`.
-- Four MCP resources embedded in the bundle: `mijiaflow://guide/tool-workflows`,
-  `mijiaflow://guide/write-transaction`, `mijiaflow://guide/browser-workflow`,
-  and `mijiaflow://guide/security`.
+- Five MCP prompts: `mijia_audit`, `mijia_guarded_change`, `mijia_backup`,
+  `mijia_diagnose` (log-based troubleshooting), and `mijia_layout_planning`
+  (floor-plan-driven rule suggestions).
+- Seven MCP resources embedded in the bundle: `mijiaflow://guide/tool-workflows`,
+  `mijiaflow://guide/write-transaction`, `mijiaflow://guide/node-catalog`,
+  `mijiaflow://guide/log-diagnosis`, `mijiaflow://guide/layout-workflow`,
+  `mijiaflow://guide/browser-workflow`, and `mijiaflow://guide/security`.
 - `structuredContent` and output schemas for `mijia_probe`,
   `mijia_begin_session`, `mijia_end_session`, `mijia_session_status`, and
   `mijia_workbench_status`.
