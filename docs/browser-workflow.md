@@ -1,5 +1,10 @@
 # Browser Workflow
 
+Optional guidance for AI agents that can drive a web browser alongside the
+MijiaFlow MCP tools. Use the native Mijia page for visual graph composition and
+the MCP tools for authoritative reads, backups, and guarded verification. MCP
+clients without browser capabilities can ignore this document.
+
 ## Inspect Or Draft
 
 1. Open or reuse the user's Mijia Geek Edition gateway page.

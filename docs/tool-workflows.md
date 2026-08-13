@@ -1,5 +1,8 @@
 # MCP Tool Workflows
 
+Reference for `mijia_read` filters, `mijia_plan_change` operation payloads, and
+opaque token handling across the MijiaFlow tools.
+
 ## Read Filters
 
 - `automations`: `id?: string`, `enabled?: boolean`, `includeNodes?: boolean`. An `id` read always returns the complete raw graph.

@@ -13,7 +13,7 @@ const WORKBENCH_SCRIPT = `(() => {
   const updated = document.getElementById("updated");
   const badge = document.getElementById("badge");
   const labels = { none: "无会话", "awaiting-passcode": "等待登录码", authenticating: "认证中", ready: "已连接", failed: "连接失败", running: "进行中", succeeded: "已完成", failedOp: "失败" };
-  const sessionText = (value) => ({ none: "尚未开始", "awaiting-passcode": "等待在本机输入登录码", authenticating: "正在建立安全连接", ready: "安全会话已就绪", failed: "会话已结束，请回到 Codex 重新开始" }[value] || "会话状态未知");
+  const sessionText = (value) => ({ none: "尚未开始", "awaiting-passcode": "等待在本机输入登录码", authenticating: "正在建立安全连接", ready: "安全会话已就绪", failed: "会话已结束，请回到 AI 客户端重新开始" }[value] || "会话状态未知");
   const render = (data) => {
     const s = data.session || { state: "none" };
     const op = data.operation;
@@ -109,7 +109,7 @@ export class PairingServer {
     if (pathname !== base && pathname !== `${base}/state`) { respond(response, 404, page("<section class=login><h1>页面不存在</h1></section>")); return; }
     if (!validSource(request, this.#port!)) { respond(response, 403, page("<section class=login><h1>请求来源无效</h1><p>请仅使用原配对页面。</p></section>")); return; }
     if (pathname === `${base}/state`) { if (request.method !== "GET") { response.writeHead(405, { Allow: "GET" }); response.end(); return; } respondJson(response, 200, this.#getState()); return; }
-    if (Date.now() >= this.#expiresAt && !this.#consumed) { respond(response, 410, page("<section class=login><h1>配对链接已失效</h1><p>请重新在 Codex 中开始会话。</p></section>")); return; }
+    if (Date.now() >= this.#expiresAt && !this.#consumed) { respond(response, 410, page("<section class=login><h1>配对链接已失效</h1><p>请回到 AI 客户端重新开始会话。</p></section>")); return; }
     if (request.method === "GET") { respond(response, 200, this.#consumed ? this.#workbench() : this.#form(), this.#consumed ? WORKBENCH_SCRIPT : PAIRING_SCRIPT); return; }
     if (request.method !== "POST" || this.#consumed) { response.writeHead(410, { "Cache-Control": "no-store" }); response.end(); return; }
     if (request.headers["content-type"]?.split(";", 1)[0] !== "application/x-www-form-urlencoded") { respond(response, 415, page("<section class=login><h1>请求格式无效</h1></section>")); return; }

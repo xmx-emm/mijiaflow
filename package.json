@@ -1,7 +1,7 @@
 {
   "name": "mijiaflow",
   "version": "0.1.0",
-  "description": "Codex plugin and MCP server for Mijia Central Hub Geek Edition.",
+  "description": "Unofficial local MCP server for auditing and controlling Mijia Central Hub Geek Edition automations.",
   "type": "module",
   "private": true,
   "license": "MIT",

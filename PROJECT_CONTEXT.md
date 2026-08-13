@@ -2,22 +2,22 @@
 
 ## Purpose
 
-MijiaFlow is an unofficial, LAN-first Codex plugin and local MCP server for auditing and controlling Mijia Central Hub Geek Edition automations. It separates browser-based graph editing from an allowlisted local API path with explicit backups, confirmations, verification, and rollback.
+MijiaFlow is an unofficial, LAN-first MCP server for auditing and controlling Mijia Central Hub Geek Edition automations from any MCP client. It separates browser-based graph editing from an allowlisted local API path with explicit backups, confirmations, verification, and rollback.
 
 ## Architecture
 
-- `.codex-plugin/plugin.json` and `.mcp.json`: Codex plugin metadata and MCP server launch configuration.
+- `.mcp.json`: repo-local MCP launch configuration for development checkouts.
 - `mcp/src/server.ts`: MCP tool schemas, annotations, result serialization, and process lifecycle.
 - `mcp/src/service.ts`: serialized orchestration across sessions and transactions.
 - `mcp/src/session/`: token-bound loopback pairing/workbench page and authenticated session ownership.
 - `mcp/src/protocol/`: WebSocket framing, ECJPAKE authentication, AES-GCM channels, compression, and JSON-RPC transport.
 - `mcp/src/domain/`: compatibility probing, allowlisted gateway operations, backups, plans, guarded apply, and rollback.
-- `skills/mijiaflow/`: Codex workflow instructions for browser and MCP control paths.
+- `docs/tool-workflows.md` and `docs/browser-workflow.md`: agent-facing workflow references (the latter only for browser-capable agents).
 - `mcp/dist/server.js`: committed runnable bundle generated from `mcp/src/server.ts` and its dependency graph.
 
 ```mermaid
 graph TD
-  Codex["Codex plugin"] --> MCP["MCP server"]
+  McpClient["MCP client (any)"] --> MCP["MCP server"]
   MCP --> Service["MijiaFlowService"]
   Service --> Session["SessionManager"]
   Service --> Transactions["TransactionManager"]
@@ -26,8 +26,7 @@ graph TD
   Client --> Gateway["LAN Mijia gateway"]
   Transactions --> API["GatewayApi allowlist"]
   API --> Client
-  Skill["MijiaFlow Skill"] --> MCP
-  Skill --> Browser["Native gateway web UI"]
+  Agent["Browser-capable agent (optional)"] --> Browser["Native gateway web UI"]
   Browser --> Gateway
 ```
 

@@ -8,7 +8,7 @@ explicit, baseline-bound transaction.
 
 Trusted components:
 
-- The local Codex process and MijiaFlow MCP subprocess
+- The local MCP client process and the MijiaFlow MCP server it launches
 - The one-time page opened on the same machine
 - The selected Mijia Central Hub and trusted LAN path
 - A backup output directory chosen by the user
@@ -34,7 +34,7 @@ or explicit session end.
 ## Credential Lifecycle
 
 - The passcode is accepted only by the loopback pairing page.
-- It is never present in MCP tool schemas or ordinary Codex messages.
+- It is never present in MCP tool schemas or ordinary chat messages.
 - It is not persisted in source files, environment files, plugin settings,
   backup receipts, or logs.
 - Passcode-derived secrets, ECJPAKE state, AES keys, salts, counters, and pairing
@@ -59,8 +59,9 @@ See [protocol notes](protocol.md) for interoperable parameters.
 ## Mutation Transaction
 
 Except for creating a backup, every mutation requires all of these gates. The
-MCP server enforces them for API writes; the Skill enforces the same sequence
-before invoking a native browser save or confirmation control:
+MCP server enforces them for API writes; the documented
+[browser workflow](browser-workflow.md) requires the same sequence before a
+native browser save or confirmation control:
 
 1. A recognized write-compatible version pair.
 2. A validated allowlisted operation and complete payload.
@@ -95,10 +96,12 @@ configuration as a side effect.
 ## Browser Boundary
 
 Browser actions occur in the visible Mijia UI and are not atomically coupled to
-the MCP session. Before a browser write, the Skill retains the authoritative raw
-baseline, creates and verifies a full backup, rechecks the baseline, and waits
-for a fresh exact browser confirmation phrase. After the native save, it reopens
-the UI and performs an API readback. Any baseline drift stops the workflow.
+the MCP session. Before a browser write, the
+[browser workflow](browser-workflow.md) requires the agent to retain the
+authoritative raw baseline, create and verify a full backup, recheck the
+baseline, and wait for a fresh exact browser confirmation phrase. After the
+native save, the agent reopens the UI and performs an API readback. Any
+baseline drift stops the workflow.
 
 ## Explicit Non-Goals
 

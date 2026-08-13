@@ -229,9 +229,10 @@ result reports the restored baseline digest and verification status.
 
 ## Browser Operations
 
-Browser control is orchestrated by the MijiaFlow Skill, not exposed as an MCP
-RPC method. Codex observes the current Mijia page and works through semantic
-labels. Before every native write, the Skill retains the API baseline, creates
-and verifies a local backup, rechecks the baseline, and waits for a fresh exact
-browser confirmation. It then reopens the UI and performs an API readback.
-Browser and API sessions are not a single atomic transaction.
+Browser control is described by the [browser workflow guide](browser-workflow.md)
+for agents with browser capabilities; it is not exposed as an MCP RPC method.
+The agent observes the current Mijia page and works through semantic labels.
+Before every native write, the workflow retains the API baseline, creates and
+verifies a local backup, rechecks the baseline, and waits for a fresh exact
+browser confirmation. The agent then reopens the UI and performs an API
+readback. Browser and API sessions are not a single atomic transaction.

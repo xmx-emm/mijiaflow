@@ -64863,7 +64863,7 @@ var WORKBENCH_SCRIPT = `(() => {
   const updated = document.getElementById("updated");
   const badge = document.getElementById("badge");
   const labels = { none: "\u65E0\u4F1A\u8BDD", "awaiting-passcode": "\u7B49\u5F85\u767B\u5F55\u7801", authenticating: "\u8BA4\u8BC1\u4E2D", ready: "\u5DF2\u8FDE\u63A5", failed: "\u8FDE\u63A5\u5931\u8D25", running: "\u8FDB\u884C\u4E2D", succeeded: "\u5DF2\u5B8C\u6210", failedOp: "\u5931\u8D25" };
-  const sessionText = (value) => ({ none: "\u5C1A\u672A\u5F00\u59CB", "awaiting-passcode": "\u7B49\u5F85\u5728\u672C\u673A\u8F93\u5165\u767B\u5F55\u7801", authenticating: "\u6B63\u5728\u5EFA\u7ACB\u5B89\u5168\u8FDE\u63A5", ready: "\u5B89\u5168\u4F1A\u8BDD\u5DF2\u5C31\u7EEA", failed: "\u4F1A\u8BDD\u5DF2\u7ED3\u675F\uFF0C\u8BF7\u56DE\u5230 Codex \u91CD\u65B0\u5F00\u59CB" }[value] || "\u4F1A\u8BDD\u72B6\u6001\u672A\u77E5");
+  const sessionText = (value) => ({ none: "\u5C1A\u672A\u5F00\u59CB", "awaiting-passcode": "\u7B49\u5F85\u5728\u672C\u673A\u8F93\u5165\u767B\u5F55\u7801", authenticating: "\u6B63\u5728\u5EFA\u7ACB\u5B89\u5168\u8FDE\u63A5", ready: "\u5B89\u5168\u4F1A\u8BDD\u5DF2\u5C31\u7EEA", failed: "\u4F1A\u8BDD\u5DF2\u7ED3\u675F\uFF0C\u8BF7\u56DE\u5230 AI \u5BA2\u6237\u7AEF\u91CD\u65B0\u5F00\u59CB" }[value] || "\u4F1A\u8BDD\u72B6\u6001\u672A\u77E5");
   const render = (data) => {
     const s = data.session || { state: "none" };
     const op = data.operation;
@@ -64989,7 +64989,7 @@ var PairingServer = class {
       return;
     }
     if (Date.now() >= this.#expiresAt && !this.#consumed) {
-      respond(response, 410, page("<section class=login><h1>\u914D\u5BF9\u94FE\u63A5\u5DF2\u5931\u6548</h1><p>\u8BF7\u91CD\u65B0\u5728 Codex \u4E2D\u5F00\u59CB\u4F1A\u8BDD\u3002</p></section>"));
+      respond(response, 410, page("<section class=login><h1>\u914D\u5BF9\u94FE\u63A5\u5DF2\u5931\u6548</h1><p>\u8BF7\u56DE\u5230 AI \u5BA2\u6237\u7AEF\u91CD\u65B0\u5F00\u59CB\u4F1A\u8BDD\u3002</p></section>"));
       return;
     }
     if (request.method === "GET") {

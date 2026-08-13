@@ -2,10 +2,10 @@
 
 ## Probe Cannot Reach The Gateway
 
-1. Open the same `baseUrl` from the machine running Codex.
+1. Open the same `baseUrl` from the machine running the MCP server.
 2. Use the gateway's private IP or trusted local hostname, including the scheme.
-3. Confirm that Codex and the gateway are on reachable LAN segments and that
-   client isolation is not blocking them.
+3. Confirm that the MCP host and the gateway are on reachable LAN segments and
+   that client isolation is not blocking them.
 4. Remove any remote HTTP proxy from the local route. MijiaFlow bypasses proxy
    use for private and loopback targets.
 5. Probe again after an IP change; plans and sessions are target-bound.
@@ -42,7 +42,7 @@ unsubmitted pairing-page expiry.
 session (`awaiting-passcode`) or the attempt already ended (`failed` or
 `none`) without exposing the pairing URL again.
 
-Do not place the gateway passcode in a Codex prompt or tool call.
+Do not place the gateway passcode in a chat prompt or tool call.
 
 ## Incorrect Passcode Or Handshake Timeout
 
@@ -108,15 +108,16 @@ read-only and do not invent a change identifier or retry the write.
 
 Refresh and re-observe the page, then navigate from a stable visible heading.
 Do not substitute guessed selectors or click by screen coordinates when several
-controls match. A frontend update may require the Skill's semantic workflow to
-be updated even when the local API remains readable.
+controls match. A frontend update may require the
+[browser workflow guidance](browser-workflow.md) to be updated even when the
+local API remains readable.
 
 ## Collecting A Report
 
 Include these non-secret facts in an issue:
 
 - MijiaFlow version and Node.js version
-- Operating system and Codex Desktop/CLI version
+- Operating system and MCP client name and version
 - Frontend version, protocol header, and capability mode from `mijia_probe`
 - Tool name, error category, and timestamp
 - Whether the target was an IP address or local hostname
