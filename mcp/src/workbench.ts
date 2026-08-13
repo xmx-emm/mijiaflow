@@ -21,10 +21,27 @@ export interface WorkbenchOperation {
   errorCode?: string;
 }
 
+/**
+ * The latest unapplied plan, displayed with full values on the loopback
+ * workbench so the user reviews the authoritative diff before confirming.
+ * Opaque tokens and receipts are deliberately excluded.
+ */
+export interface WorkbenchPendingPlan {
+  operation: string;
+  objectKey: string;
+  summary: string;
+  confirmation: string;
+  diff: JsonDiffEntry[];
+  baselineDigest: string;
+  expiresAt: string;
+  createdAt: string;
+}
+
 export interface WorkbenchSnapshot {
   updatedAt: string;
   session: SessionStatus;
   operation?: WorkbenchOperation;
+  pendingPlan?: WorkbenchPendingPlan;
 }
 
 export interface WorkbenchProgress {

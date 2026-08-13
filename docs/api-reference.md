@@ -71,9 +71,11 @@ passcode there. The gateway WebSocket is not opened until the form is submitted.
 The result reports pairing state and expiry without echoing the passcode. The
 page accepts exactly one authentication submission. After submission the same
 token-bound URL keeps serving a read-only workbench with redacted session and
-operation progress until the session ends, but a retry always requires a new
-`mijia_begin_session` call and URL. Closing the browser page does not itself
-cancel a still-pending server-side pairing session.
+operation progress until the session ends; while a change plan awaits
+confirmation it also previews the plan's full diff and one-time confirmation
+phrase. A retry always requires a new `mijia_begin_session` call and URL.
+Closing the browser page does not itself cancel a still-pending server-side
+pairing session.
 
 ## `mijia_end_session`
 
@@ -106,12 +108,18 @@ recovery always goes through a new `mijia_begin_session` call.
 
 ## `mijia_workbench_status`
 
-Returns the redacted session and recent-operation snapshot rendered by the
-loopback workbench. It can show the current stage (`read`, `plan`, `backup`,
-`apply`, `verify`, or `rollback`), bounded diff entries, stable result metadata,
-and local error categories. It never returns the loopback URL, passcode, opaque
-transaction handles, confirmation phrases, backup paths, full payloads, device
-data, or gateway-originated error text.
+Returns the session and recent-operation snapshot rendered by the loopback
+workbench. Operation progress is redacted: it shows the current stage (`read`,
+`plan`, `backup`, `apply`, `verify`, or `rollback`), bounded diff entries with
+masked values, stable result metadata, and local error categories.
+
+While a change plan awaits confirmation, the snapshot additionally carries
+`pendingPlan` with the plan summary, its full-value diff, expiry, and the
+one-time confirmation phrase — the same data `mijia_plan_change` already
+returned — so the local workbench page can show the authoritative preview for
+the user to review before confirming. The snapshot never returns the loopback
+URL, the passcode, opaque plan tokens or backup receipts, backup paths, or
+gateway-originated error text.
 
 ```json
 {}

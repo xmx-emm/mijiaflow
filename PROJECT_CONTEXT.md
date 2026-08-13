@@ -50,6 +50,7 @@ graph TD
 - The supported write pair is frontend `v1.6.1` with protocol `2.0.0`; other combinations are read-only.
 - Non-backup writes require a plan, a verified post-plan backup receipt, exact confirmation, baseline recheck, readback verification, and retained rollback state.
 - Gateway-originated error text is untrusted and must not be copied into MCP results; expose stable local messages, locally generated hints, and narrowly typed metadata only.
+- The workbench snapshot redacts operation values but intentionally shows the latest pending plan with its full diff and confirmation phrase for local review; plan tokens and backup receipts never appear in it.
 - Stay client-neutral: no Codex-, Cursor-, or vendor-specific plugin layer, and no client name in page text, tool descriptions, or docs.
 - Guide resources are `docs/*.md` imported through the esbuild `text` loader; the build also injects `__MIJIAFLOW_VERSION__` from `package.json`. Editing a guide changes the shipped bundle.
 - Keep `mcp/dist/server.js` synchronized with source changes because both `.mcp.json` and the published `bin` launch the bundle directly.

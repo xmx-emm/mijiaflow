@@ -6,7 +6,7 @@ import { TransactionManager } from "./domain/transaction-manager.js";
 import { SessionManager, type BeginSessionResult, type SessionStatus } from "./session/session-manager.js";
 import { AsyncMutex } from "./util/async-mutex.js";
 import { asMijiaFlowError } from "./errors.js";
-import type { WorkbenchDiffEntry, WorkbenchOperation, WorkbenchProgress, WorkbenchSnapshot } from "./workbench.js";
+import type { WorkbenchDiffEntry, WorkbenchOperation, WorkbenchPendingPlan, WorkbenchProgress, WorkbenchSnapshot } from "./workbench.js";
 
 export const DEFAULT_BACKUP_DIR = join(homedir(), ".mijiaflow", "backups");
 
@@ -39,6 +39,7 @@ export class MijiaFlowService {
   readonly #transactions = new TransactionManager((progress) => this.#updateOperation(progress));
   readonly #lifecycle = new AsyncMutex();
   #operation: WorkbenchOperation | undefined;
+  #pendingPlan: { token: string; view: WorkbenchPendingPlan } | undefined;
   #updatedAt = new Date().toISOString();
 
   async probe(baseUrl: string): Promise<ProbeResult> {
@@ -49,6 +50,7 @@ export class MijiaFlowService {
     return this.#lifecycle.runExclusive(async () => {
       this.#transactions.clear();
       this.#operation = undefined;
+      this.#pendingPlan = undefined;
       return this.#sessions.begin(baseUrl);
     });
   }
@@ -58,6 +60,7 @@ export class MijiaFlowService {
       const result = this.#sessions.end();
       this.#transactions.clear();
       this.#operation = undefined;
+      this.#pendingPlan = undefined;
       this.#touch();
       return result;
     });
@@ -82,6 +85,7 @@ export class MijiaFlowService {
       updatedAt: this.#updatedAt,
       session,
       ...(this.#operation ? { operation: this.#operation } : {}),
+      ...(this.#pendingPlan ? { pendingPlan: this.#pendingPlan.view } : {}),
     });
   }
 
@@ -90,8 +94,25 @@ export class MijiaFlowService {
   }
 
   async planChange(operation: string, payload: unknown): Promise<unknown> {
-    return this.#runOperation("plan", `生成 ${operation} 变更计划`, () =>
-      this.#transactions.plan(this.#sessions.requireWritable(), operation, payload));
+    return this.#runOperation("plan", `生成 ${operation} 变更计划`, async () => {
+      const result = await this.#transactions.plan(this.#sessions.requireWritable(), operation, payload);
+      // Shown with full values on the loopback workbench so the user reviews
+      // the authoritative diff locally; the opaque planToken stays out.
+      this.#pendingPlan = {
+        token: result.planToken,
+        view: {
+          operation: result.operation,
+          objectKey: result.objectKey,
+          summary: result.summary,
+          confirmation: result.confirmation,
+          diff: result.diff,
+          baselineDigest: result.baselineDigest,
+          expiresAt: result.expiresAt,
+          createdAt: new Date().toISOString(),
+        },
+      };
+      return result;
+    });
   }
 
   async createBackup(
@@ -109,12 +130,18 @@ export class MijiaFlowService {
     backupReceipt: string,
     confirmation: string,
   ): Promise<unknown> {
-    return this.#runOperation("apply", "执行已确认的变更", () => this.#transactions.apply(
+    return this.#runOperation("apply", "执行已确认的变更", async () => {
+      const result = await this.#transactions.apply(
         this.#sessions.requireWritable(),
         planToken,
         backupReceipt,
         confirmation,
-      ));
+      );
+      if (this.#pendingPlan?.token === planToken) {
+        this.#pendingPlan = undefined;
+      }
+      return result;
+    });
   }
 
   async rollback(changeId: string, confirmation: string): Promise<unknown> {

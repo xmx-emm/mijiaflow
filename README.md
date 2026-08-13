@@ -16,7 +16,9 @@ Cline, Windsurf, VS Code, Codex CLI, Gemini CLI, and others.
   optional cloud backup that is created, polled, downloaded, and verified.
 - **Loopback pairing and workbench:** the gateway passcode is entered only on a
   one-time `127.0.0.1` page, which then stays open as a read-only progress
-  workbench. The passcode never appears in chat, tool arguments, or logs.
+  workbench and previews every pending change plan (full diff plus the one-time
+  confirmation phrase) before you approve it. The passcode never appears in
+  chat, tool arguments, or logs.
 
 MijiaFlow does not copy Xiaomi frontend code and does not use the restricted
 Xiaomi Home Assistant cloud interface. It talks directly to a reachable Mijia

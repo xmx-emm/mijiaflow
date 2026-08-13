@@ -141,6 +141,8 @@ describe("session lifecycle primitives", () => {
     expect(response.status).toBe(200);
     expect(response.redirected).toBe(true);
     expect(body).toContain("MijiaFlow 工作台");
+    expect(body).toContain('id="pending"');
+    expect(body).toContain('id="pending-phrase"');
     expect(body).not.toContain("sensitive internal detail");
     expect(body).not.toContain("654321");
 

@@ -34,6 +34,10 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - The pairing page persists as a read-only workbench for the life of the
   session, showing redacted session and operation progress with a same-origin
   state endpoint. MCP remains the only write path.
+- The workbench previews the latest unapplied plan with its full-value diff,
+  expiry, and one-time confirmation phrase, and `mijia_workbench_status`
+  exposes the same `pendingPlan` snapshot; opaque plan tokens and backup
+  receipts stay excluded.
 - `mijia_create_backup` accepts an optional `outputDir` and defaults to
   `~/.mijiaflow/backups`.
 - Tool descriptions and input fields now document preconditions and semantics

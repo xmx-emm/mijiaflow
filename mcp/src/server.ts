@@ -143,6 +143,12 @@ const beginSessionOutputSchema = z.object({
   state: z.literal("awaiting-passcode"),
 });
 
+const workbenchDiffEntrySchema = z.object({
+  path: z.string(),
+  before: z.unknown().optional(),
+  after: z.unknown().optional(),
+});
+
 const workbenchOutputSchema = z.object({
   updatedAt: z.string().describe("Timestamp of the last snapshot change (ISO 8601)"),
   session: sessionStatusOutputSchema.describe("Redacted session state shown by the workbench"),
@@ -152,14 +158,21 @@ const workbenchOutputSchema = z.object({
     startedAt: z.string(),
     finishedAt: z.string().optional(),
     summary: z.string().optional(),
-    diff: z.array(z.object({
-      path: z.string(),
-      before: z.unknown().optional(),
-      after: z.unknown().optional(),
-    })).optional().describe("Redacted diff entries; values are masked"),
+    diff: z.array(workbenchDiffEntrySchema).optional().describe("Redacted diff entries; values are masked"),
     result: z.record(z.string(), z.unknown()).optional().describe("Redacted result summary"),
     errorCode: z.string().optional(),
   }).optional().describe("Most recent operation, when any"),
+  pendingPlan: z.object({
+    operation: z.string(),
+    objectKey: z.string(),
+    summary: z.string(),
+    confirmation: z.string()
+      .describe("One-time confirmation phrase; the user must review the diff and send it verbatim themselves"),
+    diff: z.array(workbenchDiffEntrySchema).describe("Full-value diff of the planned change"),
+    baselineDigest: z.string(),
+    expiresAt: z.string(),
+    createdAt: z.string(),
+  }).optional().describe("The most recent unapplied plan, also shown with full values on the loopback workbench"),
 });
 
 server.registerTool(

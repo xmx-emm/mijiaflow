@@ -5,13 +5,14 @@ import { mkdir, readFile, realpath, writeFile } from "node:fs/promises";
 import { MijiaFlowError } from "../errors.js";
 import type { SessionContext } from "../session/session-manager.js";
 import { decodeBackup, encodeBackup, type BackupDocument } from "./backup-codec.js";
-import { diffJson, digestJson } from "./canonical-json.js";
+import { diffJson, digestJson, type JsonDiffEntry } from "./canonical-json.js";
 import {
   applyPreparedOperation,
   objectFromBackup,
   prepareOperation,
   readPreparedObject,
   restorePreparedBaseline,
+  type OperationName,
   type PreparedOperation,
 } from "./operations.js";
 import type { WorkbenchProgress } from "../workbench.js";
@@ -52,6 +53,18 @@ interface ChangeRecord {
   operation: PreparedOperation;
   afterDigest: string;
   source: "applied" | "recovery";
+}
+
+export interface PlanResult {
+  planToken: string;
+  operation: OperationName;
+  objectKey: string;
+  summary: string;
+  diff: JsonDiffEntry[];
+  baselineDigest: string;
+  targetDigest: string;
+  confirmation: string;
+  expiresAt: string;
 }
 
 function token(bytes = 24): string {
@@ -139,7 +152,7 @@ export class TransactionManager {
     this.#changes.clear();
   }
 
-  async plan(context: SessionContext, operation: string, payload: unknown): Promise<Record<string, unknown>> {
+  async plan(context: SessionContext, operation: string, payload: unknown): Promise<PlanResult> {
     this.#onProgress?.({ stage: "plan", state: "running", summary: `生成 ${operation} 变更计划` });
     if (context.probe.mode !== "read-write") {
       throw new MijiaFlowError("This gateway version is read-only", "READ_ONLY_VERSION");
