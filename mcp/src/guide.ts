@@ -46,7 +46,7 @@ export const GUIDE_RESOURCES: readonly GuideResource[] = [
     name: "node-catalog",
     uri: "mijiaflow://guide/node-catalog",
     title: "Node Catalog",
-    description: "The raw graph contract, the v1.6.1 node type inventory, and the evidence-based procedure for composing new graphs.",
+    description: "The raw graph contract, the v1.6.1 node type inventory with observed shapes, and the evidence-based procedure for composing new graphs.",
     text: nodeCatalog,
   },
   {
