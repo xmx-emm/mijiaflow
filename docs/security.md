@@ -27,9 +27,9 @@ The loopback pairing listener binds only `127.0.0.1`, uses a random single-use
 token, applies a short expiry, and accepts a bounded request body. It opens the
 gateway WebSocket only after the request source, format, and six-digit passcode
 shape pass validation. After the first authentication submission it rejects all
-later POST requests, while a non-secret terminal result remains available to GET
-for 60 seconds. The listener then stops, and also stops on an unsubmitted expiry
-or explicit session end.
+later POST requests; the same token-bound page then serves only a read-only
+workbench view backed by a redacted same-origin state endpoint. The listener
+stops on an unsubmitted expiry, explicit session end, or process shutdown.
 
 ## Credential Lifecycle
 

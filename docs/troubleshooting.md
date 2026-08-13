@@ -1,5 +1,18 @@
 # Troubleshooting
 
+## The Server Does Not Start In The Client
+
+- Confirm Node.js 22 or newer: `node --version`. The npm package declares
+  `engines.node >= 22` and the bundle targets that runtime.
+- Test the executable outside the client: `npx -y mijiaflow --version` should
+  print the version. An MCP server otherwise reads stdio and prints nothing.
+- On Windows, some clients cannot spawn `npx` directly; configure
+  `"command": "cmd", "args": ["/c", "npx", "-y", "mijiaflow"]`.
+- If `npx` serves a stale version, clear its cache with
+  `npx -y mijiaflow@latest --version` or `npm cache clean --force`.
+- When running from a clone, point the client at the built bundle
+  `mcp/dist/server.js` and rebuild after source changes (`npm run build`).
+
 ## Probe Cannot Reach The Gateway
 
 1. Open the same `baseUrl` from the machine running the MCP server.

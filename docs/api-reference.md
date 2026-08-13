@@ -1,11 +1,12 @@
 # MCP API Reference
 
-MijiaFlow exposes ten tools. There is no generic RPC, arbitrary method, shell,
-or `callAPI` interface. Tool errors use MCP error results and redact passcodes,
-session keys, pairing tokens, and decrypted protocol payloads where they may
-contain secrets. Gateway-provided JSON-RPC error messages are treated as
-untrusted payloads: callers receive the stable message `Gateway RPC failed`
-and, when present, only the numeric `rpcCode` metadata.
+MijiaFlow exposes ten tools, three prompts, and four guide resources. There is
+no generic RPC, arbitrary method, shell, or `callAPI` interface. Tool errors use
+MCP error results and redact passcodes, session keys, pairing tokens, and
+decrypted protocol payloads where they may contain secrets. Gateway-provided
+JSON-RPC error messages are treated as untrusted payloads: callers receive the
+stable message `Gateway RPC failed` and, when present, only the numeric
+`rpcCode` metadata.
 
 ## Shared Rules
 
@@ -18,6 +19,28 @@ and, when present, only the numeric `rpcCode` metadata.
   invalid after `mijia_end_session` or a server restart.
 - A natural-language description is not a raw graph. API graph writes require
   a complete `{ id, nodes, cfg }` object.
+
+## Result Shapes
+
+Every tool returns its payload as pretty-printed JSON text content.
+`mijia_probe`, `mijia_begin_session`, `mijia_end_session`,
+`mijia_session_status`, and `mijia_workbench_status` also declare an
+`outputSchema` and return the same object as `structuredContent`, so clients
+can consume them without parsing text.
+
+Error results set `isError` and contain a JSON object with a stable `error`
+code, a stable local `message`, an actionable `hint` for known codes, and
+narrowly typed `details` when available. The `hint` is generated locally from
+the error code and never derived from gateway-provided text. For example, a
+call that needs an authenticated session returns:
+
+```json
+{
+  "error": "SESSION_NOT_READY",
+  "message": "No authenticated Mijia session is ready",
+  "hint": "Call mijia_begin_session, have the user enter the passcode on the 127.0.0.1 page, and poll mijia_session_status until it reports ready."
+}
+```
 
 ## `mijia_probe`
 
@@ -46,10 +69,11 @@ passcode there. The gateway WebSocket is not opened until the form is submitted.
 ```
 
 The result reports pairing state and expiry without echoing the passcode. The
-page accepts exactly one authentication submission. Its non-secret success or
-failure result remains available to GET and refresh for 60 seconds, but a retry
-always requires a new `mijia_begin_session` call and URL. Closing the browser
-page does not itself cancel a still-pending server-side pairing session.
+page accepts exactly one authentication submission. After submission the same
+token-bound URL keeps serving a read-only workbench with redacted session and
+operation progress until the session ends, but a retry always requires a new
+`mijia_begin_session` call and URL. Closing the browser page does not itself
+cancel a still-pending server-side pairing session.
 
 ## `mijia_end_session`
 
@@ -175,6 +199,10 @@ tool returns `BACKUP_NOT_FOUND` and does not create a second backup.
 }
 ```
 
+`outputDir` is optional. When omitted, the backup is written to
+`~/.mijiaflow/backups`. When provided it must be an absolute path, and
+`fileName` must be a plain portable filename without directory segments.
+
 The result includes an opaque `backupReceipt`, file metadata, content digest,
 coverage metadata, and cloud status when requested. The receipt is required by
 `mijia_apply_change`; a filename alone is not proof of a valid backup.
@@ -226,6 +254,37 @@ Rollback is target-, session-, and change-bound. It refuses an expired or
 already consumed confirmation, rechecks the current object, performs the
 allowlisted inverse/restore action, and reads back the restored state. The
 result reports the restored baseline digest and verification status.
+
+## Prompts
+
+The server registers three prompts so clients can start a correct workflow
+without external instructions. Each returns a single user message.
+
+| Prompt | Arguments | Purpose |
+| --- | --- | --- |
+| `mijia_audit` | `baseUrl` | Probe, pair, and inspect automations, devices, variables, and logs without changing anything. |
+| `mijia_guarded_change` | `baseUrl`, `change` | Run the full guarded write transaction for one described change. |
+| `mijia_backup` | `baseUrl`, `cloud?` | Create a verified local backup, and a verified cloud backup when `cloud` is `"cloud"`. |
+
+## Resources
+
+Guide documents are embedded in the bundle and served as `text/markdown`, so
+they are available to any client regardless of how the package was installed.
+
+| URI | Contents |
+| --- | --- |
+| `mijiaflow://guide/tool-workflows` | Read filters, allowlisted operations, and opaque token handling. |
+| `mijiaflow://guide/write-transaction` | The mandatory plan, backup, confirm, apply, verify, and rollback sequence. |
+| `mijiaflow://guide/browser-workflow` | Optional guidance for browser-capable agents. |
+| `mijiaflow://guide/security` | Trust boundaries, credential lifecycle, and enforced mutation gates. |
+
+## Server Instructions
+
+The `initialize` result carries server instructions summarizing the whole flow
+(probe, pair on the loopback page, poll status, read, plan, back up, confirm,
+apply, roll back, end session) together with the safety rules. Clients that
+surface server instructions to the model do not need any additional prompt
+engineering to use MijiaFlow correctly.
 
 ## Browser Operations
 
