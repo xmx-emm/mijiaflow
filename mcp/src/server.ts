@@ -8,6 +8,23 @@ import { DEFAULT_BACKUP_DIR, MijiaFlowService } from "./service.js";
 
 const VERSION = typeof __MIJIAFLOW_VERSION__ === "string" ? __MIJIAFLOW_VERSION__ : "0.0.0-dev";
 
+const cliArgs = process.argv.slice(2);
+if (cliArgs.includes("--version") || cliArgs.includes("-v")) {
+  console.log(VERSION);
+  process.exit(0);
+}
+if (cliArgs.includes("--help") || cliArgs.includes("-h")) {
+  console.log(`mijiaflow ${VERSION} - unofficial MCP server for Mijia Central Hub Geek Edition.
+
+This executable is an MCP stdio server. Launch it from an MCP client
+configuration instead of running it interactively, for example:
+
+  { "command": "npx", "args": ["-y", "mijiaflow"] }
+
+Documentation: https://github.com/xmx-emm/mijiaflow`);
+  process.exit(0);
+}
+
 const service = new MijiaFlowService();
 const server = new McpServer(
   { name: "mijiaflow", version: VERSION },

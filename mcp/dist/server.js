@@ -65367,7 +65367,23 @@ var MijiaFlowService = class {
 };
 
 // mcp/src/server.ts
-var VERSION = true ? "0.1.0" : "0.0.0-dev";
+var VERSION = true ? "0.2.0" : "0.0.0-dev";
+var cliArgs = process.argv.slice(2);
+if (cliArgs.includes("--version") || cliArgs.includes("-v")) {
+  console.log(VERSION);
+  process.exit(0);
+}
+if (cliArgs.includes("--help") || cliArgs.includes("-h")) {
+  console.log(`mijiaflow ${VERSION} - unofficial MCP server for Mijia Central Hub Geek Edition.
+
+This executable is an MCP stdio server. Launch it from an MCP client
+configuration instead of running it interactively, for example:
+
+  { "command": "npx", "args": ["-y", "mijiaflow"] }
+
+Documentation: https://github.com/xmx-emm/mijiaflow`);
+  process.exit(0);
+}
 var service = new MijiaFlowService();
 var server = new McpServer(
   { name: "mijiaflow", version: VERSION },

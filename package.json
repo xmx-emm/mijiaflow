@@ -1,12 +1,42 @@
 {
   "name": "mijiaflow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Unofficial local MCP server for auditing and controlling Mijia Central Hub Geek Edition automations.",
   "type": "module",
-  "private": true,
   "license": "MIT",
+  "author": {
+    "name": "xmx-emm",
+    "url": "https://github.com/xmx-emm"
+  },
+  "homepage": "https://github.com/xmx-emm/mijiaflow#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xmx-emm/mijiaflow.git"
+  },
+  "bugs": "https://github.com/xmx-emm/mijiaflow/issues",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "mcp-server",
+    "mijia",
+    "xiaomi",
+    "smart-home",
+    "home-automation",
+    "automation"
+  ],
+  "bin": {
+    "mijiaflow": "mcp/dist/server.js"
+  },
+  "files": [
+    "mcp/dist/server.js",
+    "README.zh-CN.md",
+    "docs/"
+  ],
   "engines": {
     "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "node scripts/build.mjs",
@@ -14,6 +44,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "verify": "npm run typecheck && npm run build && npm test",
+    "prepublishOnly": "npm run verify",
     "start": "node mcp/dist/server.js"
   },
   "dependencies": {
