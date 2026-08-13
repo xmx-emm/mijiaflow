@@ -13,7 +13,7 @@
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "verify": "npm run typecheck && npm test && npm run build",
+    "verify": "npm run typecheck && npm run build && npm test",
     "start": "node mcp/dist/server.js"
   },
   "dependencies": {

@@ -1,10 +1,14 @@
-import { probeGateway } from "./domain/compatibility.js";
+import { homedir } from "node:os";
+import { join } from "node:path";
+import { probeGateway, type ProbeResult } from "./domain/compatibility.js";
 import type { ReadResource } from "./domain/gateway-api.js";
 import { TransactionManager } from "./domain/transaction-manager.js";
-import { SessionManager } from "./session/session-manager.js";
+import { SessionManager, type BeginSessionResult, type SessionStatus } from "./session/session-manager.js";
 import { AsyncMutex } from "./util/async-mutex.js";
 import { asMijiaFlowError } from "./errors.js";
 import type { WorkbenchDiffEntry, WorkbenchOperation, WorkbenchProgress, WorkbenchSnapshot } from "./workbench.js";
+
+export const DEFAULT_BACKUP_DIR = join(homedir(), ".mijiaflow", "backups");
 
 const SECRET_KEYS = new Set([
   "passcode", "planToken", "backupReceipt", "confirmation", "rollbackConfirmation",
@@ -37,11 +41,11 @@ export class MijiaFlowService {
   #operation: WorkbenchOperation | undefined;
   #updatedAt = new Date().toISOString();
 
-  async probe(baseUrl: string): Promise<unknown> {
+  async probe(baseUrl: string): Promise<ProbeResult> {
     return (await probeGateway(baseUrl)).probe;
   }
 
-  async beginSession(baseUrl: string): Promise<unknown> {
+  async beginSession(baseUrl: string): Promise<BeginSessionResult> {
     return this.#lifecycle.runExclusive(async () => {
       this.#transactions.clear();
       this.#operation = undefined;
@@ -49,7 +53,7 @@ export class MijiaFlowService {
     });
   }
 
-  async endSession(): Promise<unknown> {
+  async endSession(): Promise<{ ended: boolean }> {
     return this.#lifecycle.runExclusive(() => {
       const result = this.#sessions.end();
       this.#transactions.clear();
@@ -59,7 +63,7 @@ export class MijiaFlowService {
     });
   }
 
-  async sessionStatus(): Promise<unknown> {
+  async sessionStatus(): Promise<SessionStatus> {
     return this.#lifecycle.runExclusive(() => this.#sessions.status());
   }
 
@@ -92,11 +96,12 @@ export class MijiaFlowService {
 
   async createBackup(
     fileName: string,
-    outputDir: string,
+    outputDir: string | undefined,
     cloud: boolean,
   ): Promise<unknown> {
+    const directory = outputDir ?? DEFAULT_BACKUP_DIR;
     return this.#runOperation("backup", "创建并校验备份", () =>
-      this.#transactions.createBackup(this.#sessions.requireReady(), fileName, outputDir, cloud));
+      this.#transactions.createBackup(this.#sessions.requireReady(), fileName, directory, cloud));
   }
 
   async applyChange(

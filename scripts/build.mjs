@@ -2,6 +2,7 @@ import { chmod, readFile, rm, writeFile } from "node:fs/promises";
 import { build } from "esbuild";
 
 const outfile = "mcp/dist/server.js";
+const { version } = JSON.parse(await readFile("package.json", "utf8"));
 
 await rm(`${outfile}.map`, { force: true });
 
@@ -13,6 +14,8 @@ await build({
   format: "esm",
   target: "node22",
   sourcemap: false,
+  loader: { ".md": "text" },
+  define: { __MIJIAFLOW_VERSION__: JSON.stringify(version) },
   banner: {
     js: [
       "#!/usr/bin/env node",
