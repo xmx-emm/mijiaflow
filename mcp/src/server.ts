@@ -67,6 +67,28 @@ server.registerTool(
 );
 
 server.registerTool(
+  "mijia_session_status",
+  {
+    title: "Check Mijia session status",
+    description: "Report the current session state (none, awaiting-passcode, authenticating, ready, or failed) without touching the gateway.",
+    inputSchema: z.object({}).strict(),
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  },
+  () => run(() => service.sessionStatus()),
+);
+
+server.registerTool(
+  "mijia_workbench_status",
+  {
+    title: "Read Mijia workbench status",
+    description: "Read the loopback workbench snapshot with session state and redacted recent operation progress.",
+    inputSchema: z.object({}).strict(),
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  },
+  () => run(() => service.workbenchStatus()),
+);
+
+server.registerTool(
   "mijia_read",
   {
     title: "Read Mijia resource",

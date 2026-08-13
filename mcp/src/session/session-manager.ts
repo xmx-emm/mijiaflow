@@ -11,6 +11,7 @@ interface ActiveSession {
   client: GatewayClient;
   api: GatewayApi;
   pairing: PairingServer;
+  pairingExpiresAt: string;
 }
 
 export interface BeginSessionResult extends PairingInfo {
@@ -26,11 +27,29 @@ export interface SessionContext {
   api: GatewayApi;
 }
 
+export type SessionState = "none" | "awaiting-passcode" | "authenticating" | "ready" | "failed";
+
+export interface SessionStatus {
+  state: SessionState;
+  sessionId?: string;
+  baseUrl?: string;
+  mode?: ProbeResult["mode"];
+  writeDisabledReasons?: string[];
+  pairingExpiresAt?: string;
+}
+
 export class SessionManager {
   #active: ActiveSession | undefined;
+  #lastFailure: SessionStatus | undefined;
+  readonly #getWorkbenchState: () => unknown;
+
+  constructor(getWorkbenchState: () => unknown = () => this.status()) {
+    this.#getWorkbenchState = getWorkbenchState;
+  }
 
   async begin(baseUrl: string): Promise<BeginSessionResult> {
     this.end();
+    this.#lastFailure = undefined;
     const { probe, target } = await probeGateway(baseUrl);
     const client = new GatewayClient(target);
     let pairing: PairingServer | undefined;
@@ -43,6 +62,7 @@ export class SessionManager {
           await client.authenticate(passcode);
         },
         () => this.#discard(client),
+        { getState: () => this.#getWorkbenchState() },
       );
       const pairingInfo = await pairing.start();
       const active: ActiveSession = {
@@ -51,6 +71,7 @@ export class SessionManager {
         client,
         api: new GatewayApi(client),
         pairing,
+        pairingExpiresAt: pairingInfo.expiresAt,
       };
       this.#active = active;
       return {
@@ -65,6 +86,32 @@ export class SessionManager {
       client.close();
       throw error;
     }
+  }
+
+  status(): SessionStatus {
+    const active = this.#active;
+    if (!active) {
+      return this.#lastFailure ?? { state: "none" };
+    }
+    // The WebSocket opens only after the passcode form is submitted, so an
+    // idle client means the one-time pairing page is still waiting for input.
+    const clientState = active.client.state;
+    const state: SessionState =
+      clientState === "ready"
+        ? "ready"
+        : clientState === "closed"
+          ? "failed"
+          : clientState === "idle"
+            ? "awaiting-passcode"
+            : "authenticating";
+    return {
+      state,
+      sessionId: active.id,
+      baseUrl: active.probe.baseUrl,
+      mode: active.probe.mode,
+      writeDisabledReasons: active.probe.writeDisabledReasons,
+      ...(state === "awaiting-passcode" ? { pairingExpiresAt: active.pairingExpiresAt } : {}),
+    };
   }
 
   requireReady(): SessionContext {
@@ -87,11 +134,13 @@ export class SessionManager {
 
   end(): { ended: boolean } {
     if (!this.#active) {
+      this.#lastFailure = undefined;
       return { ended: false };
     }
     this.#active.pairing.close();
     this.#active.client.close();
     this.#active = undefined;
+    this.#lastFailure = undefined;
     return { ended: true };
   }
 
@@ -100,8 +149,8 @@ export class SessionManager {
       client.close();
       return;
     }
-    this.#active.pairing.close();
     this.#active.client.close();
-    this.#active = undefined;
+    // Retain the loopback workbench until an explicit end so the user can see
+    // that this session failed instead of landing on a vanished result page.
   }
 }

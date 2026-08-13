@@ -35,7 +35,7 @@ describe("session lifecycle primitives", () => {
     let failures = 0;
     const pairing = new PairingServer(async () => undefined, () => {
       failures += 1;
-    }, 20);
+    }, { ttlMs: 20 });
     await pairing.start();
     await new Promise((resolve) => setTimeout(resolve, 50));
     expect(failures).toBe(1);
@@ -89,6 +89,8 @@ describe("session lifecycle primitives", () => {
       body: "passcode=123456",
     });
     expect(accepted.status).toBe(200);
+    expect(accepted.redirected).toBe(true);
+    expect(await accepted.text()).toContain("MijiaFlow 工作台");
     expect(received).toBe("123456");
 
     const repeated = await fetch(pairingUrl, {
@@ -105,7 +107,7 @@ describe("session lifecycle primitives", () => {
     const pairing = new PairingServer(
       async () => new Promise((resolve) => setTimeout(resolve, 600)),
       () => { failures += 1; },
-      500,
+      { ttlMs: 500 },
     );
     const { pairingUrl } = await pairing.start();
     const response = await fetch(pairingUrl, {
@@ -118,10 +120,15 @@ describe("session lifecycle primitives", () => {
     pairing.close();
   });
 
-  it("reports a redacted gateway rejection without exposing authentication data", async () => {
-    const pairing = new PairingServer(async () => {
-      throw new MijiaFlowError("sensitive internal detail", "GATEWAY_REJECTED");
-    });
+  it("redirects a rejected submission to the workbench without exposing authentication data", async () => {
+    let failed = false;
+    const pairing = new PairingServer(
+      async () => {
+        throw new MijiaFlowError("sensitive internal detail", "GATEWAY_REJECTED");
+      },
+      () => { failed = true; },
+      { getState: () => ({ session: { state: failed ? "failed" : "awaiting-passcode" } }) },
+    );
     const { pairingUrl } = await pairing.start();
     const response = await fetch(pairingUrl, {
       method: "POST",
@@ -130,17 +137,21 @@ describe("session lifecycle primitives", () => {
     });
     const body = await response.text();
 
-    expect(response.status).toBe(401);
-    expect(body).toContain("网关拒绝了登录码");
+    expect(failed).toBe(true);
+    expect(response.status).toBe(200);
+    expect(response.redirected).toBe(true);
+    expect(body).toContain("MijiaFlow 工作台");
     expect(body).not.toContain("sensitive internal detail");
     expect(body).not.toContain("654321");
 
-    const refreshed = await fetch(pairingUrl);
-    const refreshedBody = await refreshed.text();
-    expect(refreshed.status).toBe(401);
-    expect(refreshedBody).toContain("网关拒绝了登录码");
-    expect(refreshedBody).not.toContain("sensitive internal detail");
-    expect(refreshedBody).not.toContain("654321");
+    const state = await fetch(`${pairingUrl}/state`);
+    expect(state.status).toBe(200);
+    expect(await state.json()).toEqual({ session: { state: "failed" } });
+
+    const crossSiteState = await fetch(`${pairingUrl}/state`, {
+      headers: { origin: "https://example.invalid" },
+    });
+    expect(crossSiteState.status).toBe(403);
     pairing.close();
   });
 });

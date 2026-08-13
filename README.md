@@ -42,11 +42,12 @@ different gateway release.
 
 The MCP server is local. The passcode is entered with the branded
 **MijiaFlow / 米家流** six-digit keypad on a one-time page bound to `127.0.0.1`.
-The gateway WebSocket opens only after that form is submitted. The page accepts
-exactly one authentication submission, keeps the non-secret result refreshable
-for 60 seconds, and then closes its listener. The passcode is retained only for
-the authentication handshake and is never accepted as a tool argument, written
-to configuration, or included in logs.
+The gateway WebSocket opens only after that form is submitted. The same
+token-bound loopback page then becomes a persistent, read-only workbench for
+the life of the session. It shows connection state and redacted operation
+progress while MCP remains the only write path. The passcode is retained only
+for the authentication handshake and is never accepted as a tool argument,
+written to configuration, or included in logs.
 
 ## Install
 
@@ -82,8 +83,11 @@ that name for `personal`.
    loopback URL. No gateway WebSocket is open yet.
 4. Enter the six-digit gateway passcode on the local MijiaFlow keypad. Submitting
    it opens the WebSocket and starts authentication.
-5. Use `mijia_read` to inspect the current state before planning any change.
-6. End the session with `mijia_end_session` when finished.
+5. Keep the loopback workbench open to watch progress; poll
+   `mijia_session_status` until the session reports `ready` when Codex needs a
+   machine-readable status.
+6. Use `mijia_read` to inspect the current state before planning any change.
+7. End the session with `mijia_end_session` when finished.
 
 Example requests:
 
@@ -129,6 +133,8 @@ intentionally provides no `callAPI` tool.
 | `mijia_probe(baseUrl)` | Detect frontend/protocol versions and safe capabilities. |
 | `mijia_begin_session(baseUrl)` | Create a pending in-memory session and a one-time six-digit pairing page; the WebSocket opens on submission. |
 | `mijia_end_session()` | Close the connection and erase authentication material. |
+| `mijia_session_status()` | Report whether the session is absent, awaiting the passcode, authenticating, ready, or failed. |
+| `mijia_workbench_status()` | Read the redacted session and recent-operation snapshot shown by the loopback workbench. |
 | `mijia_read(resource, filters)` | Read automations, devices, variables, logs, or backups. |
 | `mijia_plan_change(operation, payload)` | Produce a baseline-bound diff and one-time confirmation phrase. |
 | `mijia_create_backup(fileName, outputDir, cloud)` | Create and verify a local backup; optionally create, poll, locate, download, and verify a gateway cloud backup. |

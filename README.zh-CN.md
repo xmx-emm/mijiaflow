@@ -69,8 +69,9 @@ codex plugin add mijiaflow@personal
 3. 用 `mijia_begin_session` 创建待配对会话并打开一次性回环地址；此时尚未连接
    网关 WebSocket。
 4. 只在本地 MijiaFlow 数字键盘输入六位网关密码；提交后才开始连接和认证。
-5. 先用 `mijia_read` 审计现状，再规划任何变更。
-6. 操作结束后调用 `mijia_end_session` 清除连接和认证材料。
+5. 保持回环工作台页面打开以观察连接和操作进度；Codex 需要机器可读状态时轮询 `mijia_session_status`，等待会话进入 `ready` 状态。
+6. 先用 `mijia_read` 审计现状，再规划任何变更。
+7. 操作结束后调用 `mijia_end_session` 清除连接和认证材料。
 
 示例请求：
 
@@ -109,6 +110,8 @@ MijiaFlow 不会把自然语言猜测直接转换成本地 API 写入。自然�
 | `mijia_probe(baseUrl)` | 探测前端/协议版本和安全能力。 |
 | `mijia_begin_session(baseUrl)` | 创建待配对内存会话和一次性六位数字页面；提交后才打开 WebSocket。 |
 | `mijia_end_session()` | 关闭连接并清除认证材料。 |
+| `mijia_session_status()` | 查询会话状态：无会话、等待登录码、认证中、就绪或失败。 |
+| `mijia_workbench_status()` | 读取回环工作台显示的脱敏会话和最近操作快照。 |
 | `mijia_read(resource, filters)` | 读取自动化、设备、变量、日志或备份。 |
 | `mijia_plan_change(operation, payload)` | 生成绑定基线的差异和一次性确认短语。 |
 | `mijia_create_backup(fileName, outputDir, cloud)` | 创建并校验本地备份；可选创建、轮询、定位、下载并校验网关云备份。 |

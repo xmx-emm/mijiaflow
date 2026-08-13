@@ -15,8 +15,9 @@ Use the native Mijia page for visual graph composition and the MijiaFlow MCP too
 4. Call `mijia_begin_session` only when an authenticated API operation is needed.
 5. Give the returned loopback URL to the user. It shows the **MijiaFlow / 米家流** six-digit keypad. Never ask for or accept the gateway passcode in chat or a tool argument.
 6. Wait for the user to submit the passcode on the one-time `127.0.0.1` page. The gateway WebSocket opens only after submission.
-7. Treat the result page as informational for at most 60 seconds. A failed attempt requires a new `mijia_begin_session`; never reuse the old page for another submission.
-8. Call `mijia_end_session` when the work is complete.
+7. Poll `mijia_session_status` while waiting. Proceed on `ready`; on `failed`, start over with a new `mijia_begin_session`.
+8. Keep the same loopback page open as a read-only workbench. It displays redacted session and transaction progress but cannot issue MCP calls or gateway writes. A failed attempt requires a new `mijia_begin_session`; never reuse the old page for another submission.
+9. Call `mijia_end_session` when the work is complete.
 
 ## Choose A Control Path
 

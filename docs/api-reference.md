@@ -1,9 +1,11 @@
 # MCP API Reference
 
-MijiaFlow exposes eight tools. There is no generic RPC, arbitrary method, shell,
+MijiaFlow exposes ten tools. There is no generic RPC, arbitrary method, shell,
 or `callAPI` interface. Tool errors use MCP error results and redact passcodes,
 session keys, pairing tokens, and decrypted protocol payloads where they may
-contain secrets.
+contain secrets. Gateway-provided JSON-RPC error messages are treated as
+untrusted payloads: callers receive the stable message `Gateway RPC failed`
+and, when present, only the numeric `rpcCode` metadata.
 
 ## Shared Rules
 
@@ -59,6 +61,37 @@ material, and stops the loopback pairing listener.
 ```
 
 This operation is idempotent.
+
+## `mijia_session_status`
+
+Reports the current session state without opening a connection or touching the
+gateway. Use it to poll pairing progress after `mijia_begin_session` instead of
+probing with reads that fail while the user is still typing the passcode.
+
+```json
+{}
+```
+
+The result contains a `state` of `none`, `awaiting-passcode`, `authenticating`,
+`ready`, or `failed`. While a session exists it also reports the session
+identifier, normalized target, compatibility mode, and any write-disabled
+reasons. While the state is `awaiting-passcode` it includes the pairing-page
+expiry. It never returns the pairing URL, the passcode, or session key
+material. A `failed` state means the last pairing or connection attempt ended;
+recovery always goes through a new `mijia_begin_session` call.
+
+## `mijia_workbench_status`
+
+Returns the redacted session and recent-operation snapshot rendered by the
+loopback workbench. It can show the current stage (`read`, `plan`, `backup`,
+`apply`, `verify`, or `rollback`), bounded diff entries, stable result metadata,
+and local error categories. It never returns the loopback URL, passcode, opaque
+transaction handles, confirmation phrases, backup paths, full payloads, device
+data, or gateway-originated error text.
+
+```json
+{}
+```
 
 ## `mijia_read`
 

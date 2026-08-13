@@ -14,6 +14,7 @@ import {
   restorePreparedBaseline,
   type PreparedOperation,
 } from "./operations.js";
+import type { WorkbenchProgress } from "../workbench.js";
 
 const PLAN_TTL_MS = 10 * 60_000;
 const RECEIPT_TTL_MS = 30 * 60_000;
@@ -122,9 +123,14 @@ export class TransactionManager {
   readonly #changes = new Map<string, ChangeRecord>();
   readonly #rollbackDirectory: string;
   #applying = false;
+  readonly #onProgress: ((progress: WorkbenchProgress) => void) | undefined;
 
-  constructor(rollbackDirectory = join(homedir(), ".mijiaflow", "backups")) {
-    this.#rollbackDirectory = rollbackDirectory;
+  constructor(
+    onProgressOrDirectory?: ((progress: WorkbenchProgress) => void) | string,
+    rollbackDirectory = join(homedir(), ".mijiaflow", "backups"),
+  ) {
+    this.#onProgress = typeof onProgressOrDirectory === "function" ? onProgressOrDirectory : undefined;
+    this.#rollbackDirectory = typeof onProgressOrDirectory === "string" ? onProgressOrDirectory : rollbackDirectory;
   }
 
   clear(): void {
@@ -134,6 +140,7 @@ export class TransactionManager {
   }
 
   async plan(context: SessionContext, operation: string, payload: unknown): Promise<Record<string, unknown>> {
+    this.#onProgress?.({ stage: "plan", state: "running", summary: `生成 ${operation} 变更计划` });
     if (context.probe.mode !== "read-write") {
       throw new MijiaFlowError("This gateway version is read-only", "READ_ONLY_VERSION");
     }
@@ -157,7 +164,7 @@ export class TransactionManager {
       targetDigest,
     };
     this.#plans.set(record.token, record);
-    return {
+    const result = {
       planToken: record.token,
       operation: prepared.name,
       objectKey: prepared.objectKey,
@@ -168,6 +175,8 @@ export class TransactionManager {
       confirmation: record.confirmation,
       expiresAt: new Date(record.expiresAt).toISOString(),
     };
+    this.#onProgress?.({ stage: "plan", state: "succeeded", summary: prepared.summary, diff: result.diff });
+    return result;
   }
 
   async createBackup(
@@ -176,6 +185,7 @@ export class TransactionManager {
     outputDir: string,
     cloud: boolean,
   ): Promise<Record<string, unknown>> {
+    this.#onProgress?.({ stage: "backup", state: "running", summary: "读取并写入备份文件" });
     this.#prune();
     if (cloud && context.probe.mode !== "read-write") {
       throw new MijiaFlowError("Cloud backup is disabled for an unknown gateway version", "READ_ONLY_VERSION");
@@ -243,7 +253,7 @@ export class TransactionManager {
         invariantDigests,
       };
     }
-    return {
+    const result = {
       backupReceipt: receipt.token,
       path: local.path,
       bytes: local.bytes,
@@ -253,6 +263,8 @@ export class TransactionManager {
       expiresAt: new Date(receipt.expiresAt).toISOString(),
       cloud: cloudResult ?? { status: "not-requested" },
     };
+    this.#onProgress?.({ stage: "backup", state: "succeeded", summary: "备份已校验", result });
+    return result;
   }
 
   async apply(
@@ -261,6 +273,7 @@ export class TransactionManager {
     backupReceipt: string,
     suppliedConfirmation: string,
   ): Promise<Record<string, unknown>> {
+    this.#onProgress?.({ stage: "apply", state: "running", summary: "检查计划、备份和当前基线" });
     if (this.#applying) {
       throw new MijiaFlowError("Another MijiaFlow write is in progress", "WRITE_IN_PROGRESS");
     }
@@ -301,6 +314,7 @@ export class TransactionManager {
       plan.consumed = true;
       try {
         await applyPreparedOperation(context.api, plan.operation);
+        this.#onProgress?.({ stage: "verify", state: "running", summary: "读取回执并验证网关状态" });
         const verified = await readPreparedObject(context.api, plan.operation);
         if (digestJson(verified) !== plan.targetDigest) {
           throw new MijiaFlowError("Gateway readback did not match the planned target", "WRITE_VERIFICATION_FAILED");
@@ -340,7 +354,7 @@ export class TransactionManager {
         );
       }
       const change = this.#recordChange(context, plan.operation, plan.targetDigest, "applied");
-      return {
+      const result = {
         changeId: change.changeId,
         status: "applied-and-verified",
         beforeDigest: plan.baselineDigest,
@@ -348,6 +362,9 @@ export class TransactionManager {
         rollbackConfirmation: change.rollbackConfirmation,
         rollbackExpiresAt: change.rollbackExpiresAt,
       };
+      this.#onProgress?.({ stage: "verify", state: "succeeded", summary: "变更已应用并验证", result });
+      this.#onProgress?.({ stage: "apply", state: "succeeded", summary: "变更已应用并验证", result });
+      return result;
     } finally {
       this.#applying = false;
     }
@@ -358,6 +375,7 @@ export class TransactionManager {
     changeId: string,
     suppliedConfirmation: string,
   ): Promise<Record<string, unknown>> {
+    this.#onProgress?.({ stage: "rollback", state: "running", summary: "检查变更并创建回滚前备份" });
     if (this.#applying) {
       throw new MijiaFlowError("Another MijiaFlow write is in progress", "WRITE_IN_PROGRESS");
     }
@@ -396,12 +414,14 @@ export class TransactionManager {
         throw new MijiaFlowError("Rollback readback did not match the retained baseline", "ROLLBACK_VERIFICATION_FAILED");
       }
       change.consumed = true;
-      return {
+      const result = {
         changeId,
         status: "rolled-back-and-verified",
         restoredDigest,
         preRollbackBackup: rollbackBackup.path,
       };
+      this.#onProgress?.({ stage: "rollback", state: "succeeded", summary: "已回滚并验证", result });
+      return result;
     } finally {
       this.#applying = false;
     }

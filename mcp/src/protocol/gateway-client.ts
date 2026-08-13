@@ -298,7 +298,7 @@ export class GatewayClient implements GatewayRpc {
       const error = rpc.error as Record<string, unknown> | undefined;
       pending.reject(
         new MijiaFlowError(
-          typeof error?.message === "string" ? error.message : "Gateway RPC failed",
+          "Gateway RPC failed",
           "GATEWAY_RPC_ERROR",
           typeof error?.code === "number" ? { rpcCode: error.code } : undefined,
         ),

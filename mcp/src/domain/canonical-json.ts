@@ -29,9 +29,21 @@ export interface JsonDiffEntry {
   after?: unknown;
 }
 
+function segment(key: string): string {
+  return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key) ? `.${key}` : `[${JSON.stringify(key)}]`;
+}
+
 export function diffJson(before: unknown, after: unknown, path = "$"): JsonDiffEntry[] {
   if (canonicalJson(before) === canonicalJson(after)) {
     return [];
+  }
+  if (Array.isArray(before) && Array.isArray(after)) {
+    const entries: JsonDiffEntry[] = [];
+    const length = Math.max(before.length, after.length);
+    for (let index = 0; index < length; index += 1) {
+      entries.push(...diffJson(before[index], after[index], `${path}[${index}]`));
+    }
+    return entries;
   }
   if (
     before &&
@@ -44,7 +56,7 @@ export function diffJson(before: unknown, after: unknown, path = "$"): JsonDiffE
     const left = before as Record<string, unknown>;
     const right = after as Record<string, unknown>;
     const keys = [...new Set([...Object.keys(left), ...Object.keys(right)])].sort();
-    return keys.flatMap((key) => diffJson(left[key], right[key], `${path}.${key}`));
+    return keys.flatMap((key) => diffJson(left[key], right[key], `${path}${segment(key)}`));
   }
   const entry: JsonDiffEntry = { path };
   if (before !== undefined) {

@@ -34,8 +34,13 @@ allowlisted. MijiaFlow itself does not automate writes on an unknown pair.
   listener.
 
 After a successful or failed submission, the same URL can refresh the non-secret
-result for 60 seconds. The old loopback port closing after that is the expected
-lifecycle, not a gateway failure.
+read-only workbench. Keep it open to observe session and recent operation
+progress. It closes after `mijia_end_session`, process shutdown, or an
+unsubmitted pairing-page expiry.
+
+`mijia_session_status` reports whether the server still holds a pending
+session (`awaiting-passcode`) or the attempt already ended (`failed` or
+`none`) without exposing the pairing URL again.
 
 Do not place the gateway passcode in a Codex prompt or tool call.
 
@@ -43,9 +48,10 @@ Do not place the gateway passcode in a Codex prompt or tool call.
 
 An incorrect passcode, invalid ECJPAKE frame, or expired deadline closes the
 attempt and clears derived material. Start a new session to obtain a new pairing
-URL. The submitted URL can show its result for 60 seconds but cannot accept a
-second authentication attempt. Reusing it or an old plan token will fail by
-design.
+URL. The submitted URL becomes the workbench and cannot accept a second
+authentication attempt. Reusing it or an old plan token will fail by design.
+`mijia_session_status` reports `failed` during that window; the only recovery
+is a new `mijia_begin_session`.
 
 Check the gateway clock/network stability and verify that the page belongs to
 the current MijiaFlow process before trying again.

@@ -2820,9 +2820,9 @@ var require_validate = __commonJS({
       }
       let expr = data;
       const segments = jsonPointer.split("/");
-      for (const segment of segments) {
-        if (segment) {
-          data = (0, codegen_1._)`${data}${(0, codegen_1.getProperty)((0, util_1.unescapeJsonPointer)(segment))}`;
+      for (const segment2 of segments) {
+        if (segment2) {
+          data = (0, codegen_1._)`${data}${(0, codegen_1.getProperty)((0, util_1.unescapeJsonPointer)(segment2))}`;
           expr = (0, codegen_1._)`${expr} && ${data}`;
         }
       }
@@ -7523,14 +7523,14 @@ var require_errors2 = __commonJS({
     };
     var kRequestRetryError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_REQ_RETRY");
     var RequestRetryError = class extends UndiciError {
-      constructor(message, code, { headers, data }) {
+      constructor(message, code, { headers: headers2, data }) {
         super(message);
         this.name = "RequestRetryError";
         this.message = message || "Request retry error";
         this.code = "UND_ERR_REQ_RETRY";
         this.statusCode = code;
         this.data = data;
-        this.headers = headers;
+        this.headers = headers2;
       }
       static [Symbol.hasInstance](instance) {
         return instance && instance[kRequestRetryError] === true;
@@ -7541,14 +7541,14 @@ var require_errors2 = __commonJS({
     };
     var kResponseError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_RESPONSE");
     var ResponseError = class extends UndiciError {
-      constructor(message, code, { headers, body }) {
+      constructor(message, code, { headers: headers2, body }) {
         super(message);
         this.name = "ResponseError";
         this.message = message || "Response error";
         this.code = "UND_ERR_RESPONSE";
         this.statusCode = code;
         this.body = body;
-        this.headers = headers;
+        this.headers = headers2;
       }
       static [Symbol.hasInstance](instance) {
         return instance && instance[kResponseError] === true;
@@ -8132,14 +8132,14 @@ var require_util2 = __commonJS({
     function bufferToLowerCasedHeaderName(value) {
       return tree.lookup(value) ?? value.toString("latin1").toLowerCase();
     }
-    function parseHeaders(headers, obj) {
+    function parseHeaders(headers2, obj) {
       if (obj === void 0) obj = {};
-      for (let i = 0; i < headers.length; i += 2) {
-        const key = headerNameToString(headers[i]);
+      for (let i = 0; i < headers2.length; i += 2) {
+        const key = headerNameToString(headers2[i]);
         let val = obj[key];
         if (val !== void 0) {
           if (!Object.hasOwn(obj, key)) {
-            const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map((x) => x.toString("latin1")) : headers[i + 1].toString("latin1");
+            const headersValue = typeof headers2[i + 1] === "string" ? headers2[i + 1] : Array.isArray(headers2[i + 1]) ? headers2[i + 1].map((x) => x.toString("latin1")) : headers2[i + 1].toString("latin1");
             if (key === "__proto__") {
               Object.defineProperty(obj, key, {
                 value: headersValue,
@@ -8155,23 +8155,23 @@ var require_util2 = __commonJS({
               val = [val];
               obj[key] = val;
             }
-            val.push(headers[i + 1].toString("latin1"));
+            val.push(headers2[i + 1].toString("latin1"));
           }
         } else {
-          const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map((x) => x.toString("latin1")) : headers[i + 1].toString("latin1");
+          const headersValue = typeof headers2[i + 1] === "string" ? headers2[i + 1] : Array.isArray(headers2[i + 1]) ? headers2[i + 1].map((x) => x.toString("latin1")) : headers2[i + 1].toString("latin1");
           obj[key] = headersValue;
         }
       }
       return obj;
     }
-    function parseRawHeaders(headers) {
-      const headersLength = headers.length;
+    function parseRawHeaders(headers2) {
+      const headersLength = headers2.length;
       const ret = new Array(headersLength);
       let key;
       let val;
       for (let n = 0; n < headersLength; n += 2) {
-        key = headers[n];
-        val = headers[n + 1];
+        key = headers2[n];
+        val = headers2[n + 1];
         typeof key !== "string" && (key = key.toString());
         typeof val !== "string" && (val = val.toString("latin1"));
         ret[n] = key;
@@ -8179,11 +8179,11 @@ var require_util2 = __commonJS({
       }
       return ret;
     }
-    function encodeRawHeaders(headers) {
-      if (!Array.isArray(headers)) {
+    function encodeRawHeaders(headers2) {
+      if (!Array.isArray(headers2)) {
         throw new TypeError("expected headers to be an array");
       }
-      return headers.map((x) => Buffer.from(x));
+      return headers2.map((x) => Buffer.from(x));
     }
     function isBuffer(buffer) {
       return buffer instanceof Uint8Array || Buffer.isBuffer(buffer);
@@ -9029,7 +9029,7 @@ var require_request = __commonJS({
         path,
         method,
         body,
-        headers,
+        headers: headers2,
         query,
         idempotent,
         blocking,
@@ -9133,28 +9133,28 @@ var require_request = __commonJS({
         this.contentType = null;
         this.headers = [];
         this.expectContinue = expectContinue != null ? expectContinue : false;
-        if (Array.isArray(headers)) {
-          if (headers.length % 2 !== 0) {
+        if (Array.isArray(headers2)) {
+          if (headers2.length % 2 !== 0) {
             throw new InvalidArgumentError("headers array must be even");
           }
-          for (let i = 0; i < headers.length; i += 2) {
-            processHeader(this, headers[i], headers[i + 1]);
+          for (let i = 0; i < headers2.length; i += 2) {
+            processHeader(this, headers2[i], headers2[i + 1]);
           }
-        } else if (headers && typeof headers === "object") {
-          if (hasSafeIterator(headers)) {
-            for (const header of headers) {
+        } else if (headers2 && typeof headers2 === "object") {
+          if (hasSafeIterator(headers2)) {
+            for (const header of headers2) {
               if (!Array.isArray(header) || header.length !== 2) {
                 throw new InvalidArgumentError("headers must be in key-value pair format");
               }
               processHeader(this, header[0], header[1]);
             }
           } else {
-            const keys = Object.keys(headers);
+            const keys = Object.keys(headers2);
             for (let i = 0; i < keys.length; ++i) {
-              processHeader(this, keys[i], headers[keys[i]]);
+              processHeader(this, keys[i], headers2[keys[i]]);
             }
           }
-        } else if (headers != null) {
+        } else if (headers2 != null) {
           throw new InvalidArgumentError("headers must be an object or an array");
         }
         assertRequestHandler(handler, method, upgrade);
@@ -9201,14 +9201,14 @@ var require_request = __commonJS({
       onResponseStarted() {
         return this[kHandler].onResponseStarted?.();
       }
-      onHeaders(statusCode, headers, resume, statusText) {
+      onHeaders(statusCode, headers2, resume, statusText) {
         assert2(!this.aborted);
         assert2(!this.completed);
         if (channels.headers.hasSubscribers) {
-          channels.headers.publish({ request: this, response: { statusCode, headers, statusText } });
+          channels.headers.publish({ request: this, response: { statusCode, headers: headers2, statusText } });
         }
         try {
-          return this[kHandler].onHeaders(statusCode, headers, resume, statusText);
+          return this[kHandler].onHeaders(statusCode, headers2, resume, statusText);
         } catch (err) {
           this.abort(err);
         }
@@ -9226,10 +9226,10 @@ var require_request = __commonJS({
           return false;
         }
       }
-      onUpgrade(statusCode, headers, socket) {
+      onUpgrade(statusCode, headers2, socket) {
         assert2(!this.aborted);
         assert2(!this.completed);
-        return this[kHandler].onUpgrade(statusCode, headers, socket);
+        return this[kHandler].onUpgrade(statusCode, headers2, socket);
       }
       onComplete(trailers) {
         this.onFinally();
@@ -9404,16 +9404,16 @@ var require_wrap_handler = __commonJS({
       onRequestStart(controller, context) {
         this.#handler.onConnect?.((reason) => controller.abort(reason), context);
       }
-      onRequestUpgrade(controller, statusCode, headers, socket) {
+      onRequestUpgrade(controller, statusCode, headers2, socket) {
         const rawHeaders = [];
-        for (const [key, val] of Object.entries(headers)) {
+        for (const [key, val] of Object.entries(headers2)) {
           rawHeaders.push(Buffer.from(key, "latin1"), toRawHeaderValue(val));
         }
         this.#handler.onUpgrade?.(statusCode, rawHeaders, socket);
       }
-      onResponseStart(controller, statusCode, headers, statusMessage) {
+      onResponseStart(controller, statusCode, headers2, statusMessage) {
         const rawHeaders = [];
-        for (const [key, val] of Object.entries(headers)) {
+        for (const [key, val] of Object.entries(headers2)) {
           rawHeaders.push(Buffer.from(key, "latin1"), toRawHeaderValue(val));
         }
         if (this.#handler.onHeaders?.(statusCode, rawHeaders, () => controller.resume(), statusMessage) === false) {
@@ -12525,11 +12525,11 @@ var require_util3 = __commonJS({
     function createInflate(zlibOptions) {
       return new InflateStream(zlibOptions);
     }
-    function extractMimeType(headers) {
+    function extractMimeType(headers2) {
       let charset = null;
       let essence = null;
       let mimeType = null;
-      const values = getDecodeSplit("content-type", headers);
+      const values = getDecodeSplit("content-type", headers2);
       if (values === null) {
         return "failure";
       }
@@ -12676,9 +12676,9 @@ var require_formdata = __commonJS({
     var nodeUtil = __require("node:util");
     var FormData = class _FormData {
       #state = [];
-      constructor(form2 = void 0) {
+      constructor(form = void 0) {
         webidl.util.markAsUncloneable(this);
-        if (form2 !== void 0) {
+        if (form !== void 0) {
           throw webidl.errors.conversionFailed({
             prefix: "FormData constructor",
             argument: "Argument 1",
@@ -13442,8 +13442,8 @@ Content-Type: ${value.type || "application/octet-stream"}\r
       return body != null && (body.stream.locked || util2.isDisturbed(body.stream));
     }
     function bodyMimeType(requestOrResponse) {
-      const headers = requestOrResponse.headersList;
-      const mimeType = extractMimeType(headers);
+      const headers2 = requestOrResponse.headersList;
+      const mimeType = extractMimeType(headers2);
       if (mimeType === "failure") {
         return null;
       }
@@ -13880,12 +13880,12 @@ var require_client_h1 = __commonJS({
        * @param {Buffer} head
        */
       onUpgrade(head) {
-        const { upgrade, client, socket, headers, statusCode } = this;
+        const { upgrade, client, socket, headers: headers2, statusCode } = this;
         assert2(upgrade);
         assert2(client[kSocket] === socket);
         assert2(!socket.destroyed);
         assert2(!this.paused);
-        assert2((headers.length & 1) === 0);
+        assert2((headers2.length & 1) === 0);
         const request = client[kQueue][client[kRunningIdx]];
         assert2(request);
         assert2(request.upgrade || request.method === "CONNECT");
@@ -13905,7 +13905,7 @@ var require_client_h1 = __commonJS({
         client[kQueue][client[kRunningIdx]++] = null;
         client.emit("disconnect", client[kUrl], [client], new InformationalError("upgrade"));
         try {
-          request.onUpgrade(statusCode, headers, socket);
+          request.onUpgrade(statusCode, headers2, socket);
         } catch (err) {
           util2.destroy(socket, err);
         }
@@ -13918,7 +13918,7 @@ var require_client_h1 = __commonJS({
        * @returns {number}
        */
       onHeadersComplete(statusCode, upgrade, shouldKeepAlive) {
-        const { client, socket, headers, statusText } = this;
+        const { client, socket, headers: headers2, statusText } = this;
         if (socket.destroyed) {
           return -1;
         }
@@ -13983,7 +13983,7 @@ var require_client_h1 = __commonJS({
         } else {
           socket[kReset] = true;
         }
-        const pause = request.onHeaders(statusCode, headers, this.resume, statusText) === false;
+        const pause = request.onHeaders(statusCode, headers2, this.resume, statusText) === false;
         if (request.aborted) {
           return -1;
         }
@@ -14031,7 +14031,7 @@ var require_client_h1 = __commonJS({
        * @returns {number}
        */
       onMessageComplete() {
-        const { client, socket, statusCode, upgrade, headers, contentLength, bytesRead, shouldKeepAlive } = this;
+        const { client, socket, statusCode, upgrade, headers: headers2, contentLength, bytesRead, shouldKeepAlive } = this;
         if (socket.destroyed && (!statusCode || shouldKeepAlive)) {
           return -1;
         }
@@ -14057,7 +14057,7 @@ var require_client_h1 = __commonJS({
           util2.destroy(socket, new ResponseContentLengthMismatchError());
           return -1;
         }
-        request.onComplete(headers);
+        request.onComplete(headers2);
         client[kQueue][client[kRunningIdx]++] = null;
         socket[kSocketUsed] = client[kPending] === 0;
         if (socket[kWriting]) {
@@ -14306,7 +14306,7 @@ var require_client_h1 = __commonJS({
     }
     function writeH1(client, request) {
       const { method, path, host, upgrade, blocking, reset } = request;
-      let { body, headers, contentLength } = request;
+      let { body, headers: headers2, contentLength } = request;
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH" || method === "QUERY" || method === "PROPFIND" || method === "PROPPATCH";
       if (util2.isFormDataLike(body)) {
         if (!extractBody) {
@@ -14314,7 +14314,7 @@ var require_client_h1 = __commonJS({
         }
         const [bodyStream, contentType] = extractBody(body);
         if (request.contentType == null) {
-          headers.push("content-type", contentType);
+          headers2.push("content-type", contentType);
         }
         body = bodyStream.stream;
         contentLength = bodyStream.length;
@@ -14326,7 +14326,7 @@ var require_client_h1 = __commonJS({
             util2.errorRequest(client, request, new InvalidArgumentError("invalid content-type header"));
             return false;
           }
-          headers.push("content-type", contentTypeValue);
+          headers2.push("content-type", contentTypeValue);
         }
       }
       if (body && typeof body.read === "function") {
@@ -14400,10 +14400,10 @@ upgrade: ${upgrade}\r
       } else {
         header += "connection: close\r\n";
       }
-      if (Array.isArray(headers)) {
-        for (let n = 0; n < headers.length; n += 2) {
-          const key = headers[n + 0];
-          const val = headers[n + 1];
+      if (Array.isArray(headers2)) {
+        for (let n = 0; n < headers2.length; n += 2) {
+          const key = headers2[n + 0];
+          const val = headers2[n + 1];
           if (Array.isArray(val)) {
             for (let i = 0; i < val.length; i++) {
               header += `${key}: ${val[i]}\r
@@ -14794,9 +14794,9 @@ var require_client_h2 = __commonJS({
         NGHTTP2_CANCEL
       }
     } = http2;
-    function parseH2Headers(headers) {
+    function parseH2Headers(headers2) {
       const result = [];
-      for (const [name, value] of Object.entries(headers)) {
+      for (const [name, value] of Object.entries(headers2)) {
         if (Array.isArray(value)) {
           for (const subvalue of value) {
             result.push(Buffer.from(name), Buffer.from(subvalue));
@@ -15042,36 +15042,36 @@ var require_client_h2 = __commonJS({
         util2.errorRequest(client, request, new InvalidArgumentError(`Custom upgrade "${upgrade}" not supported over HTTP/2`));
         return false;
       }
-      const headers = {};
+      const headers2 = {};
       for (let n = 0; n < reqHeaders.length; n += 2) {
         const key = reqHeaders[n + 0];
         const val = reqHeaders[n + 1];
         if (key === "cookie") {
-          if (headers[key] != null) {
-            headers[key] = Array.isArray(headers[key]) ? (headers[key].push(val), headers[key]) : [headers[key], val];
+          if (headers2[key] != null) {
+            headers2[key] = Array.isArray(headers2[key]) ? (headers2[key].push(val), headers2[key]) : [headers2[key], val];
           } else {
-            headers[key] = val;
+            headers2[key] = val;
           }
           continue;
         }
         if (Array.isArray(val)) {
           for (let i = 0; i < val.length; i++) {
-            if (headers[key]) {
-              headers[key] += `, ${val[i]}`;
+            if (headers2[key]) {
+              headers2[key] += `, ${val[i]}`;
             } else {
-              headers[key] = val[i];
+              headers2[key] = val[i];
             }
           }
-        } else if (headers[key]) {
-          headers[key] += `, ${val}`;
+        } else if (headers2[key]) {
+          headers2[key] += `, ${val}`;
         } else {
-          headers[key] = val;
+          headers2[key] = val;
         }
       }
       let stream = null;
       const { hostname: hostname3, port } = client[kUrl];
-      headers[HTTP2_HEADER_AUTHORITY] = host || `${hostname3}${port ? `:${port}` : ""}`;
-      headers[HTTP2_HEADER_METHOD] = method;
+      headers2[HTTP2_HEADER_AUTHORITY] = host || `${hostname3}${port ? `:${port}` : ""}`;
+      headers2[HTTP2_HEADER_METHOD] = method;
       const abort = (err) => {
         if (request.aborted || request.completed) {
           return;
@@ -15102,18 +15102,18 @@ var require_client_h2 = __commonJS({
             session.unref();
             return false;
           }
-          headers[HTTP2_HEADER_METHOD] = "CONNECT";
-          headers[HTTP2_HEADER_PROTOCOL] = "websocket";
-          headers[HTTP2_HEADER_PATH] = path;
+          headers2[HTTP2_HEADER_METHOD] = "CONNECT";
+          headers2[HTTP2_HEADER_PROTOCOL] = "websocket";
+          headers2[HTTP2_HEADER_PATH] = path;
           if (protocol === "ws:" || protocol === "wss:") {
-            headers[HTTP2_HEADER_SCHEME] = protocol === "ws:" ? "http" : "https";
+            headers2[HTTP2_HEADER_SCHEME] = protocol === "ws:" ? "http" : "https";
           } else {
-            headers[HTTP2_HEADER_SCHEME] = protocol === "http:" ? "http" : "https";
+            headers2[HTTP2_HEADER_SCHEME] = protocol === "http:" ? "http" : "https";
           }
-          stream = session.request(headers, { endStream: false, signal });
+          stream = session.request(headers2, { endStream: false, signal });
           stream[kHTTP2Stream] = true;
-          stream.once("response", (headers2, _flags) => {
-            const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers2;
+          stream.once("response", (headers3, _flags) => {
+            const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers3;
             request.onUpgrade(statusCode, parseH2Headers(realHeaders), stream);
             ++session[kOpenStreams];
             client[kQueue][client[kRunningIdx]++] = null;
@@ -15130,10 +15130,10 @@ var require_client_h2 = __commonJS({
           stream.setTimeout(requestTimeout);
           return true;
         }
-        stream = session.request(headers, { endStream: false, signal });
+        stream = session.request(headers2, { endStream: false, signal });
         stream[kHTTP2Stream] = true;
-        stream.on("response", (headers2) => {
-          const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers2;
+        stream.on("response", (headers3) => {
+          const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers3;
           request.onUpgrade(statusCode, parseH2Headers(realHeaders), stream);
           ++session[kOpenStreams];
           client[kQueue][client[kRunningIdx]++] = null;
@@ -15145,8 +15145,8 @@ var require_client_h2 = __commonJS({
         stream.setTimeout(requestTimeout);
         return true;
       }
-      headers[HTTP2_HEADER_PATH] = path;
-      headers[HTTP2_HEADER_SCHEME] = protocol === "http:" ? "http" : "https";
+      headers2[HTTP2_HEADER_PATH] = path;
+      headers2[HTTP2_HEADER_SCHEME] = protocol === "http:" ? "http" : "https";
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH";
       if (body && typeof body.read === "function") {
         body.read(0);
@@ -15155,7 +15155,7 @@ var require_client_h2 = __commonJS({
       if (util2.isFormDataLike(body)) {
         extractBody ??= require_body().extractBody;
         const [bodyStream, contentType] = extractBody(body);
-        headers["content-type"] = contentType;
+        headers2["content-type"] = contentType;
         body = bodyStream.stream;
         contentLength = bodyStream.length;
       }
@@ -15174,25 +15174,25 @@ var require_client_h2 = __commonJS({
       }
       if (contentLength != null) {
         assert2(body || contentLength === 0, "no body must not have content length");
-        headers[HTTP2_HEADER_CONTENT_LENGTH] = `${contentLength}`;
+        headers2[HTTP2_HEADER_CONTENT_LENGTH] = `${contentLength}`;
       }
       session.ref();
       if (channels.sendHeaders.hasSubscribers) {
         let header = "";
-        for (const key in headers) {
-          header += `${key}: ${headers[key]}\r
+        for (const key in headers2) {
+          header += `${key}: ${headers2[key]}\r
 `;
         }
         channels.sendHeaders.publish({ request, headers: header, socket: session[kSocket] });
       }
       const shouldEndStream = method === "GET" || method === "HEAD" || body === null;
       if (expectContinue) {
-        headers[HTTP2_HEADER_EXPECT] = "100-continue";
-        stream = session.request(headers, { endStream: shouldEndStream, signal });
+        headers2[HTTP2_HEADER_EXPECT] = "100-continue";
+        stream = session.request(headers2, { endStream: shouldEndStream, signal });
         stream[kHTTP2Stream] = true;
         stream.once("continue", writeBodyH2);
       } else {
-        stream = session.request(headers, {
+        stream = session.request(headers2, {
           endStream: shouldEndStream,
           signal
         });
@@ -15202,8 +15202,8 @@ var require_client_h2 = __commonJS({
       ++session[kOpenStreams];
       stream.setTimeout(requestTimeout);
       let responseReceived = false;
-      stream.once("response", (headers2) => {
-        const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers2;
+      stream.once("response", (headers3) => {
+        const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers3;
         request.onResponseStarted();
         responseReceived = true;
         if (request.aborted) {
@@ -17463,12 +17463,12 @@ var require_proxy_agent = __commonJS({
     }
     var Http1ProxyWrapper = class extends DispatcherBase {
       #client;
-      constructor(proxyUrl, { headers = {}, connect, factory }) {
+      constructor(proxyUrl, { headers: headers2 = {}, connect, factory }) {
         if (!proxyUrl) {
           throw new InvalidArgumentError("Proxy URL is mandatory");
         }
         super();
-        this[kProxyHeaders] = headers;
+        this[kProxyHeaders] = headers2;
         if (factory) {
           this.#client = factory(proxyUrl, { connect });
         } else {
@@ -17489,14 +17489,14 @@ var require_proxy_agent = __commonJS({
         const {
           origin,
           path = "/",
-          headers = {}
+          headers: headers2 = {}
         } = opts;
         opts.path = origin + path;
-        if (!("host" in headers) && !("Host" in headers)) {
+        if (!("host" in headers2) && !("Host" in headers2)) {
           const { host } = new URL(origin);
-          headers.host = host;
+          headers2.host = host;
         }
-        opts.headers = { ...this[kProxyHeaders], ...headers };
+        opts.headers = { ...this[kProxyHeaders], ...headers2 };
         return this.#client[kDispatch](opts, handler);
       }
       [kClose]() {
@@ -17622,16 +17622,16 @@ var require_proxy_agent = __commonJS({
         });
       }
       dispatch(opts, handler) {
-        const headers = buildHeaders(opts.headers);
-        throwIfProxyAuthIsSent(headers);
-        if (headers && !("host" in headers) && !("Host" in headers)) {
+        const headers2 = buildHeaders(opts.headers);
+        throwIfProxyAuthIsSent(headers2);
+        if (headers2 && !("host" in headers2) && !("Host" in headers2)) {
           const { host } = new URL(opts.origin);
-          headers.host = host;
+          headers2.host = host;
         }
         return this[kAgent].dispatch(
           {
             ...opts,
-            headers
+            headers: headers2
           },
           handler
         );
@@ -17664,18 +17664,18 @@ var require_proxy_agent = __commonJS({
         return Promise.all(promises);
       }
     };
-    function buildHeaders(headers) {
-      if (Array.isArray(headers)) {
+    function buildHeaders(headers2) {
+      if (Array.isArray(headers2)) {
         const headersPair = {};
-        for (let i = 0; i < headers.length; i += 2) {
-          headersPair[headers[i]] = headers[i + 1];
+        for (let i = 0; i < headers2.length; i += 2) {
+          headersPair[headers2[i]] = headers2[i + 1];
         }
         return headersPair;
       }
-      return headers;
+      return headers2;
     }
-    function throwIfProxyAuthIsSent(headers) {
-      const existProxyAuth = headers && Object.keys(headers).find((key) => key.toLowerCase() === "proxy-authorization");
+    function throwIfProxyAuthIsSent(headers2) {
+      const existProxyAuth = headers2 && Object.keys(headers2).find((key) => key.toLowerCase() === "proxy-authorization");
       if (existProxyAuth) {
         throw new InvalidArgumentError("Proxy-Authorization should be sent in ProxyAgent constructor");
       }
@@ -17824,8 +17824,8 @@ var require_retry_handler = __commonJS({
       const retryTime = new Date(retryAfter).getTime();
       return isNaN(retryTime) ? 0 : retryTime - Date.now();
     }
-    function validatePartialResponseContentLength(headers, range, statusCode, retryCount) {
-      const contentLength = headers["content-length"];
+    function validatePartialResponseContentLength(headers2, range, statusCode, retryCount) {
+      const contentLength = headers2["content-length"];
       if (contentLength == null) {
         return;
       }
@@ -17836,7 +17836,7 @@ var require_retry_handler = __commonJS({
       const expectedLength = range.end - range.start + 1;
       if (!Number.isFinite(length) || length !== expectedLength) {
         throw new RequestRetryError("Content-Length mismatch", statusCode, {
-          headers,
+          headers: headers2,
           data: { count: retryCount }
         });
       }
@@ -17896,11 +17896,11 @@ var require_retry_handler = __commonJS({
         this.end = null;
         this.etag = null;
       }
-      onResponseStartWithRetry(controller, statusCode, headers, statusMessage, err) {
+      onResponseStartWithRetry(controller, statusCode, headers2, statusMessage, err) {
         if (this.retryOpts.throwOnError) {
           if (this.retryOpts.statusCodes.includes(statusCode) === false) {
             this.headersSent = true;
-            this.handler.onResponseStart?.(controller, statusCode, headers, statusMessage);
+            this.handler.onResponseStart?.(controller, statusCode, headers2, statusMessage);
           } else {
             this.error = err;
           }
@@ -17908,13 +17908,13 @@ var require_retry_handler = __commonJS({
         }
         if (isDisturbed(this.opts.body)) {
           this.headersSent = true;
-          this.handler.onResponseStart?.(controller, statusCode, headers, statusMessage);
+          this.handler.onResponseStart?.(controller, statusCode, headers2, statusMessage);
           return;
         }
         function shouldRetry(passedErr) {
           if (passedErr) {
             this.headersSent = true;
-            this.handler.onResponseStart?.(controller, statusCode, headers, statusMessage);
+            this.handler.onResponseStart?.(controller, statusCode, headers2, statusMessage);
             controller.resume();
             return;
           }
@@ -17936,11 +17936,11 @@ var require_retry_handler = __commonJS({
           this.handler.onRequestStart?.(controller, context);
         }
       }
-      onRequestUpgrade(controller, statusCode, headers, socket) {
-        this.handler.onRequestUpgrade?.(controller, statusCode, headers, socket);
+      onRequestUpgrade(controller, statusCode, headers2, socket) {
+        this.handler.onRequestUpgrade?.(controller, statusCode, headers2, socket);
       }
       static [kRetryHandlerDefaultRetry](err, { state, opts }, cb) {
-        const { statusCode, code, headers } = err;
+        const { statusCode, code, headers: headers2 } = err;
         const { method, retryOptions } = opts;
         const {
           maxRetries,
@@ -17968,48 +17968,48 @@ var require_retry_handler = __commonJS({
           cb(err);
           return;
         }
-        let retryAfterHeader = headers?.["retry-after"];
+        let retryAfterHeader = headers2?.["retry-after"];
         if (retryAfterHeader) {
           retryAfterHeader = Number(retryAfterHeader);
-          retryAfterHeader = Number.isNaN(retryAfterHeader) ? calculateRetryAfterHeader(headers["retry-after"]) : retryAfterHeader * 1e3;
+          retryAfterHeader = Number.isNaN(retryAfterHeader) ? calculateRetryAfterHeader(headers2["retry-after"]) : retryAfterHeader * 1e3;
         }
         const retryTimeout = retryAfterHeader > 0 ? Math.min(retryAfterHeader, maxTimeout) : Math.min(minTimeout * timeoutFactor ** (counter - 1), maxTimeout);
         setTimeout(() => cb(null), retryTimeout);
       }
-      onResponseStart(controller, statusCode, headers, statusMessage) {
+      onResponseStart(controller, statusCode, headers2, statusMessage) {
         this.error = null;
         this.retryCount += 1;
         if (statusCode >= 300) {
           const err = new RequestRetryError("Request failed", statusCode, {
-            headers,
+            headers: headers2,
             data: {
               count: this.retryCount
             }
           });
-          this.onResponseStartWithRetry(controller, statusCode, headers, statusMessage, err);
+          this.onResponseStartWithRetry(controller, statusCode, headers2, statusMessage, err);
           return;
         }
         if (this.headersSent) {
           if (statusCode !== 206 && (this.start > 0 || statusCode !== 200)) {
             throw new RequestRetryError("server does not support the range header and the payload was partially consumed", statusCode, {
-              headers,
+              headers: headers2,
               data: { count: this.retryCount }
             });
           }
-          const contentRange = parseRangeHeader(headers["content-range"]);
+          const contentRange = parseRangeHeader(headers2["content-range"]);
           if (!contentRange) {
             throw new RequestRetryError("Content-Range mismatch", statusCode, {
-              headers,
+              headers: headers2,
               data: { count: this.retryCount }
             });
           }
-          if (this.etag != null && this.etag !== headers.etag) {
+          if (this.etag != null && this.etag !== headers2.etag) {
             throw new RequestRetryError("ETag mismatch", statusCode, {
-              headers,
+              headers: headers2,
               data: { count: this.retryCount }
             });
           }
-          validatePartialResponseContentLength(headers, contentRange, statusCode, this.retryCount);
+          validatePartialResponseContentLength(headers2, contentRange, statusCode, this.retryCount);
           const { start, size, end = size ? size - 1 : null } = contentRange;
           assert2(this.start === start, "content-range mismatch");
           assert2(this.end == null || this.end === end, "content-range mismatch");
@@ -18017,18 +18017,18 @@ var require_retry_handler = __commonJS({
         }
         if (this.end == null) {
           if (statusCode === 206) {
-            const range = parseRangeHeader(headers["content-range"]);
+            const range = parseRangeHeader(headers2["content-range"]);
             if (range == null) {
               this.headersSent = true;
               this.handler.onResponseStart?.(
                 controller,
                 statusCode,
-                headers,
+                headers2,
                 statusMessage
               );
               return;
             }
-            validatePartialResponseContentLength(headers, range, statusCode, this.retryCount);
+            validatePartialResponseContentLength(headers2, range, statusCode, this.retryCount);
             const { start, size, end = size ? size - 1 : null } = range;
             assert2(
               start != null && Number.isFinite(start),
@@ -18039,7 +18039,7 @@ var require_retry_handler = __commonJS({
             this.end = end;
           }
           if (this.end == null) {
-            const contentLength = headers["content-length"];
+            const contentLength = headers2["content-length"];
             this.end = contentLength != null ? Number(contentLength) - 1 : null;
           }
           assert2(Number.isFinite(this.start));
@@ -18048,7 +18048,7 @@ var require_retry_handler = __commonJS({
             "invalid content-length"
           );
           this.resume = true;
-          this.etag = headers.etag != null ? headers.etag : null;
+          this.etag = headers2.etag != null ? headers2.etag : null;
           if (this.etag != null && this.etag[0] === "W" && this.etag[1] === "/") {
             this.etag = null;
           }
@@ -18056,12 +18056,12 @@ var require_retry_handler = __commonJS({
           this.handler.onResponseStart?.(
             controller,
             statusCode,
-            headers,
+            headers2,
             statusMessage
           );
         } else {
           throw new RequestRetryError("Request failed", statusCode, {
-            headers,
+            headers: headers2,
             data: { count: this.retryCount }
           });
         }
@@ -18085,15 +18085,15 @@ var require_retry_handler = __commonJS({
       }
       retry(controller) {
         if (this.start !== 0) {
-          const headers = { range: `bytes=${this.start}-${this.end ?? ""}` };
+          const headers2 = { range: `bytes=${this.start}-${this.end ?? ""}` };
           if (this.etag != null) {
-            headers["if-match"] = this.etag;
+            headers2["if-match"] = this.etag;
           }
           this.opts = {
             ...this.opts,
             headers: {
               ...this.opts.headers,
-              ...headers
+              ...headers2
             }
           };
         }
@@ -18692,14 +18692,14 @@ var require_api_request = __commonJS({
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
         const { callback, opaque, abort, context, responseHeaders, highWaterMark } = this;
-        const headers = responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
+        const headers2 = responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
-            this.onInfo({ statusCode, headers });
+            this.onInfo({ statusCode, headers: headers2 });
           }
           return;
         }
-        const parsedHeaders = responseHeaders === "raw" ? util2.parseHeaders(rawHeaders) : headers;
+        const parsedHeaders = responseHeaders === "raw" ? util2.parseHeaders(rawHeaders) : headers2;
         const contentType = parsedHeaders["content-type"];
         const contentLength = parsedHeaders["content-length"];
         const res = new Readable({
@@ -18720,7 +18720,7 @@ var require_api_request = __commonJS({
             this.runInAsyncScope(callback, null, null, {
               statusCode,
               statusText: statusMessage,
-              headers,
+              headers: headers2,
               trailers: this.trailers,
               opaque,
               body: res,
@@ -18914,10 +18914,10 @@ var require_api_stream = __commonJS({
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
         const { factory, opaque, context, responseHeaders } = this;
-        const headers = responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
+        const headers2 = responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
-            this.onInfo({ statusCode, headers });
+            this.onInfo({ statusCode, headers: headers2 });
           }
           return;
         }
@@ -18927,7 +18927,7 @@ var require_api_stream = __commonJS({
         }
         const res = this.runInAsyncScope(factory, null, {
           statusCode,
-          headers,
+          headers: headers2,
           opaque,
           context
         });
@@ -19137,8 +19137,8 @@ var require_api_pipeline = __commonJS({
         const { opaque, handler, context } = this;
         if (statusCode < 200) {
           if (this.onInfo) {
-            const headers = this.responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
-            this.onInfo({ statusCode, headers });
+            const headers2 = this.responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
+            this.onInfo({ statusCode, headers: headers2 });
           }
           return;
         }
@@ -19146,10 +19146,10 @@ var require_api_pipeline = __commonJS({
         let body;
         try {
           this.handler = null;
-          const headers = this.responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
+          const headers2 = this.responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
           body = this.runInAsyncScope(handler, null, {
             statusCode,
-            headers,
+            headers: headers2,
             opaque,
             body: this.res,
             context
@@ -19254,9 +19254,9 @@ var require_api_upgrade = __commonJS({
         const { callback, opaque, context } = this;
         removeSignal(this);
         this.callback = null;
-        const headers = this.responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
+        const headers2 = this.responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
         this.runInAsyncScope(callback, null, null, {
-          headers,
+          headers: headers2,
           socket,
           opaque,
           context
@@ -19345,13 +19345,13 @@ var require_api_connect = __commonJS({
         const { callback, opaque, context } = this;
         removeSignal(this);
         this.callback = null;
-        let headers = rawHeaders;
-        if (headers != null) {
-          headers = this.responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
+        let headers2 = rawHeaders;
+        if (headers2 != null) {
+          headers2 = this.responseHeaders === "raw" ? util2.parseRawHeaders(rawHeaders) : util2.parseHeaders(rawHeaders);
         }
         this.runInAsyncScope(callback, null, null, {
           statusCode,
-          headers,
+          headers: headers2,
           socket,
           opaque,
           context
@@ -19500,50 +19500,50 @@ var require_mock_utils = __commonJS({
       }
       return false;
     }
-    function lowerCaseEntries(headers) {
+    function lowerCaseEntries(headers2) {
       return Object.fromEntries(
-        Object.entries(headers).map(([headerName, headerValue]) => {
+        Object.entries(headers2).map(([headerName, headerValue]) => {
           return [headerName.toLocaleLowerCase(), headerValue];
         })
       );
     }
-    function getHeaderByName(headers, key) {
-      if (Array.isArray(headers)) {
-        for (let i = 0; i < headers.length; i += 2) {
-          if (headers[i].toLocaleLowerCase() === key.toLocaleLowerCase()) {
-            return headers[i + 1];
+    function getHeaderByName(headers2, key) {
+      if (Array.isArray(headers2)) {
+        for (let i = 0; i < headers2.length; i += 2) {
+          if (headers2[i].toLocaleLowerCase() === key.toLocaleLowerCase()) {
+            return headers2[i + 1];
           }
         }
         return void 0;
-      } else if (typeof headers.get === "function") {
-        return headers.get(key);
+      } else if (typeof headers2.get === "function") {
+        return headers2.get(key);
       } else {
-        return lowerCaseEntries(headers)[key.toLocaleLowerCase()];
+        return lowerCaseEntries(headers2)[key.toLocaleLowerCase()];
       }
     }
-    function buildHeadersFromArray(headers) {
-      const clone2 = headers.slice();
+    function buildHeadersFromArray(headers2) {
+      const clone2 = headers2.slice();
       const entries = [];
       for (let index = 0; index < clone2.length; index += 2) {
         entries.push([clone2[index], clone2[index + 1]]);
       }
       return Object.fromEntries(entries);
     }
-    function matchHeaders(mockDispatch2, headers) {
+    function matchHeaders(mockDispatch2, headers2) {
       if (typeof mockDispatch2.headers === "function") {
-        if (Array.isArray(headers)) {
-          headers = buildHeadersFromArray(headers);
+        if (Array.isArray(headers2)) {
+          headers2 = buildHeadersFromArray(headers2);
         }
-        return mockDispatch2.headers(headers ? lowerCaseEntries(headers) : {});
+        return mockDispatch2.headers(headers2 ? lowerCaseEntries(headers2) : {});
       }
       if (typeof mockDispatch2.headers === "undefined") {
         return true;
       }
-      if (typeof headers !== "object" || typeof mockDispatch2.headers !== "object") {
+      if (typeof headers2 !== "object" || typeof mockDispatch2.headers !== "object") {
         return false;
       }
       for (const [matchHeaderName, matchHeaderValue] of Object.entries(mockDispatch2.headers)) {
-        const headerValue = getHeaderByName(headers, matchHeaderName);
+        const headerValue = getHeaderByName(headers2, matchHeaderName);
         if (!matchValue(matchHeaderValue, headerValue)) {
           return false;
         }
@@ -19586,11 +19586,11 @@ var require_mock_utils = __commonJS({
       qp.sort();
       return [...pathSegments, qp.toString()].join("?");
     }
-    function matchKey(mockDispatch2, { path, method, body, headers }) {
+    function matchKey(mockDispatch2, { path, method, body, headers: headers2 }) {
       const pathMatch = matchValue(mockDispatch2.path, path);
       const methodMatch = matchValue(mockDispatch2.method, method);
       const bodyMatch = typeof mockDispatch2.body !== "undefined" ? matchValue(mockDispatch2.body, body) : true;
-      const headersMatch = matchHeaders(mockDispatch2, headers);
+      const headersMatch = matchHeaders(mockDispatch2, headers2);
       return pathMatch && methodMatch && bodyMatch && headersMatch;
     }
     function getResponseData(data) {
@@ -19628,8 +19628,8 @@ var require_mock_utils = __commonJS({
       }
       matchedMockDispatches = matchedMockDispatches.filter((mockDispatch2) => matchHeaders(mockDispatch2, key.headers));
       if (matchedMockDispatches.length === 0) {
-        const headers = typeof key.headers === "object" ? JSON.stringify(key.headers) : key.headers;
-        throw new MockNotMatchedError(`Mock dispatch not matched for headers '${headers}' on path '${resolvedPath}'`);
+        const headers2 = typeof key.headers === "object" ? JSON.stringify(key.headers) : key.headers;
+        throw new MockNotMatchedError(`Mock dispatch not matched for headers '${headers2}' on path '${resolvedPath}'`);
       }
       return matchedMockDispatches[0];
     }
@@ -19662,12 +19662,12 @@ var require_mock_utils = __commonJS({
       return path;
     }
     function buildKey(opts) {
-      const { path, method, body, headers, query } = opts;
+      const { path, method, body, headers: headers2, query } = opts;
       return {
         path,
         method,
         body,
-        headers,
+        headers: headers2,
         query
       };
     }
@@ -19705,7 +19705,7 @@ var require_mock_utils = __commonJS({
       if (mockDispatch2.data.callback) {
         mockDispatch2.data = { ...mockDispatch2.data, ...mockDispatch2.data.callback(opts) };
       }
-      const { data: { statusCode, data, headers, trailers, error: error51 }, delay, persist } = mockDispatch2;
+      const { data: { statusCode, data, headers: headers2, trailers, error: error51 }, delay, persist } = mockDispatch2;
       const { timesInvoked, times } = mockDispatch2;
       mockDispatch2.consumed = !persist && timesInvoked >= times;
       mockDispatch2.pending = timesInvoked < times;
@@ -19749,7 +19749,7 @@ var require_mock_utils = __commonJS({
           return;
         }
         const responseData = getResponseData(body);
-        const responseHeaders = generateKeyValues(headers);
+        const responseHeaders = generateKeyValues(headers2);
         const responseTrailers = generateKeyValues(trailers);
         handler.onHeaders?.(statusCode, responseHeaders, resume, getStatusText(statusCode));
         handler.onData?.(Buffer.from(responseData));
@@ -19924,9 +19924,9 @@ var require_mock_interceptor = __commonJS({
       createMockScopeDispatchData({ statusCode, data, responseOptions }) {
         const responseData = getResponseData(data);
         const contentLength = this[kContentLength] ? { "content-length": responseData.length } : {};
-        const headers = { ...this[kDefaultHeaders], ...contentLength, ...responseOptions.headers };
+        const headers2 = { ...this[kDefaultHeaders], ...contentLength, ...responseOptions.headers };
         const trailers = { ...this[kDefaultTrailers], ...responseOptions.trailers };
-        return { statusCode, data, headers, trailers };
+        return { statusCode, data, headers: headers2, trailers };
       }
       validateReplyParameters(replyParameters) {
         if (typeof replyParameters.statusCode === "undefined") {
@@ -19978,11 +19978,11 @@ var require_mock_interceptor = __commonJS({
       /**
        * Set default reply headers on the interceptor for subsequent replies
        */
-      defaultReplyHeaders(headers) {
-        if (typeof headers === "undefined") {
+      defaultReplyHeaders(headers2) {
+        if (typeof headers2 === "undefined") {
           throw new InvalidArgumentError("headers must be defined");
         }
-        this[kDefaultHeaders] = headers;
+        this[kDefaultHeaders] = headers2;
         return this;
       }
       /**
@@ -20571,8 +20571,8 @@ var require_snapshot_utils = __commonJS({
     }
     var crypto = runtimeFeatures.has("crypto") ? __require("node:crypto") : null;
     var hashId = crypto?.hash ? (value) => crypto.hash("sha256", value, "base64url") : (value) => Buffer.from(value).toString("base64url");
-    function isUndiciHeaders(headers) {
-      return Array.isArray(headers) && (headers.length & 1) === 0;
+    function isUndiciHeaders(headers2) {
+      return Array.isArray(headers2) && (headers2.length & 1) === 0;
     }
     function isUrlExcludedFactory(excludePatterns = []) {
       if (excludePatterns.length === 0) {
@@ -20597,13 +20597,13 @@ var require_snapshot_utils = __commonJS({
         return false;
       };
     }
-    function normalizeHeaders(headers) {
+    function normalizeHeaders(headers2) {
       const normalizedHeaders = {};
-      if (!headers) return normalizedHeaders;
-      if (isUndiciHeaders(headers)) {
-        for (let i = 0; i < headers.length; i += 2) {
-          const key = headers[i];
-          const value = headers[i + 1];
+      if (!headers2) return normalizedHeaders;
+      if (isUndiciHeaders(headers2)) {
+        for (let i = 0; i < headers2.length; i += 2) {
+          const key = headers2[i];
+          const value = headers2[i + 1];
           if (key && value !== void 0) {
             const keyStr = Buffer.isBuffer(key) ? key.toString() : key;
             const valueStr = Buffer.isBuffer(value) ? value.toString() : value;
@@ -20612,8 +20612,8 @@ var require_snapshot_utils = __commonJS({
         }
         return normalizedHeaders;
       }
-      if (headers && typeof headers === "object") {
-        for (const [key, value] of Object.entries(headers)) {
+      if (headers2 && typeof headers2 === "object") {
+        for (const [key, value] of Object.entries(headers2)) {
           if (key && typeof key === "string") {
             normalizedHeaders[key.toLowerCase()] = Array.isArray(value) ? value.join(", ") : String(value);
           }
@@ -20663,14 +20663,14 @@ var require_snapshot_recorder = __commonJS({
         body: matchOptions.matchBody !== false && opts.body ? String(opts.body) : ""
       };
     }
-    function filterHeadersForMatching(headers, headerFilters, matchOptions = {}) {
-      if (!headers || typeof headers !== "object") return {};
+    function filterHeadersForMatching(headers2, headerFilters, matchOptions = {}) {
+      if (!headers2 || typeof headers2 !== "object") return {};
       const {
         caseSensitive = false
       } = matchOptions;
       const filtered = {};
       const { ignore, exclude, match } = headerFilters;
-      for (const [key, value] of Object.entries(headers)) {
+      for (const [key, value] of Object.entries(headers2)) {
         const headerKey = caseSensitive ? key : key.toLowerCase();
         if (exclude.has(headerKey)) continue;
         if (ignore.has(headerKey)) continue;
@@ -20681,14 +20681,14 @@ var require_snapshot_recorder = __commonJS({
       }
       return filtered;
     }
-    function filterHeadersForStorage(headers, headerFilters, matchOptions = {}) {
-      if (!headers || typeof headers !== "object") return {};
+    function filterHeadersForStorage(headers2, headerFilters, matchOptions = {}) {
+      if (!headers2 || typeof headers2 !== "object") return {};
       const {
         caseSensitive = false
       } = matchOptions;
       const filtered = {};
       const { exclude: excludeSet } = headerFilters;
-      for (const [key, value] of Object.entries(headers)) {
+      for (const [key, value] of Object.entries(headers2)) {
         const headerKey = caseSensitive ? key : key.toLowerCase();
         if (excludeSet.has(headerKey)) continue;
         filtered[headerKey] = value;
@@ -21128,13 +21128,13 @@ var require_snapshot_agent = __commonJS({
           onRequestStart(controller, context) {
             return handler.onRequestStart(controller, { ...context, history: this.history });
           },
-          onRequestUpgrade(controller, statusCode, headers, socket) {
-            return handler.onRequestUpgrade(controller, statusCode, headers, socket);
+          onRequestUpgrade(controller, statusCode, headers2, socket) {
+            return handler.onRequestUpgrade(controller, statusCode, headers2, socket);
           },
-          onResponseStart(controller, statusCode, headers, statusMessage) {
+          onResponseStart(controller, statusCode, headers2, statusMessage) {
             responseData.statusCode = statusCode;
-            responseData.headers = headers;
-            return handler.onResponseStart(controller, statusCode, headers, statusMessage);
+            responseData.headers = headers2;
+            return handler.onResponseStart(controller, statusCode, headers2, statusMessage);
           },
           onResponseData(controller, chunk) {
             responseData.body.push(chunk);
@@ -21478,10 +21478,10 @@ var require_redirect_handler = __commonJS({
       onRequestStart(controller, context) {
         this.handler.onRequestStart?.(controller, { ...context, history: this.history });
       }
-      onRequestUpgrade(controller, statusCode, headers, socket) {
-        this.handler.onRequestUpgrade?.(controller, statusCode, headers, socket);
+      onRequestUpgrade(controller, statusCode, headers2, socket) {
+        this.handler.onRequestUpgrade?.(controller, statusCode, headers2, socket);
       }
-      onResponseStart(controller, statusCode, headers, statusMessage) {
+      onResponseStart(controller, statusCode, headers2, statusMessage) {
         if (this.opts.throwOnMaxRedirect && this.history.length >= this.maxRedirections) {
           throw new Error("max redirects");
         }
@@ -21499,12 +21499,12 @@ var require_redirect_handler = __commonJS({
           }
           this.opts.body = null;
         }
-        this.location = this.history.length >= this.maxRedirections || util2.isDisturbed(this.opts.body) || redirectableStatusCodes.indexOf(statusCode) === -1 ? null : headers.location;
+        this.location = this.history.length >= this.maxRedirections || util2.isDisturbed(this.opts.body) || redirectableStatusCodes.indexOf(statusCode) === -1 ? null : headers2.location;
         if (this.opts.origin) {
           this.history.push(new URL(this.opts.path, this.opts.origin));
         }
         if (!this.location) {
-          this.handler.onResponseStart?.(controller, statusCode, headers, statusMessage);
+          this.handler.onResponseStart?.(controller, statusCode, headers2, statusMessage);
           return;
         }
         const { origin, pathname, search } = util2.parseURL(new URL(this.location, this.opts.origin && new URL(this.opts.path, this.opts.origin)));
@@ -21550,23 +21550,23 @@ var require_redirect_handler = __commonJS({
       }
       return false;
     }
-    function cleanRequestHeaders(headers, removeContent, unknownOrigin) {
+    function cleanRequestHeaders(headers2, removeContent, unknownOrigin) {
       const ret = [];
-      if (Array.isArray(headers)) {
-        for (let i = 0; i < headers.length; i += 2) {
-          if (!shouldRemoveHeader(headers[i], removeContent, unknownOrigin)) {
-            ret.push(headers[i], headers[i + 1]);
+      if (Array.isArray(headers2)) {
+        for (let i = 0; i < headers2.length; i += 2) {
+          if (!shouldRemoveHeader(headers2[i], removeContent, unknownOrigin)) {
+            ret.push(headers2[i], headers2[i + 1]);
           }
         }
-      } else if (headers && typeof headers === "object") {
-        const entries = util2.hasSafeIterator(headers) ? headers : Object.entries(headers);
+      } else if (headers2 && typeof headers2 === "object") {
+        const entries = util2.hasSafeIterator(headers2) ? headers2 : Object.entries(headers2);
         for (const [key, value] of entries) {
           if (!shouldRemoveHeader(key, removeContent, unknownOrigin)) {
             ret.push(key, value);
           }
         }
       } else {
-        assert2(headers == null, "headers must be an object or an array");
+        assert2(headers2 == null, "headers must be an object or an array");
       }
       return ret;
     }
@@ -21622,12 +21622,12 @@ var require_response_error = __commonJS({
         this.#body = "";
         return super.onRequestStart(controller, context);
       }
-      onResponseStart(controller, statusCode, headers, statusMessage) {
+      onResponseStart(controller, statusCode, headers2, statusMessage) {
         this.#statusCode = statusCode;
-        this.#headers = headers;
-        this.#contentType = headers["content-type"];
+        this.#headers = headers2;
+        this.#contentType = headers2["content-type"];
         if (this.#statusCode < 400) {
-          return super.onResponseStart(controller, statusCode, headers, statusMessage);
+          return super.onResponseStart(controller, statusCode, headers2, statusMessage);
         }
         if (this.#checkContentType("application/json") || this.#checkContentType("text/plain")) {
           this.#decoder = new TextDecoder("utf-8");
@@ -21731,8 +21731,8 @@ var require_dump = __commonJS({
         this.#controller = controller;
         return super.onRequestStart(controller, context);
       }
-      onResponseStart(controller, statusCode, headers, statusMessage) {
-        const contentLength = headers["content-length"];
+      onResponseStart(controller, statusCode, headers2, statusMessage) {
+        const contentLength = headers2["content-length"];
         if (contentLength != null && contentLength > this.#maxSize) {
           throw new RequestAbortedError(
             `Response size (${contentLength}) larger than maxSize (${this.#maxSize})`
@@ -21741,7 +21741,7 @@ var require_dump = __commonJS({
         if (this.aborted === true) {
           return true;
         }
-        return super.onResponseStart(controller, statusCode, headers, statusMessage);
+        return super.onResponseStart(controller, statusCode, headers2, statusMessage);
       }
       onResponseError(controller, err) {
         if (this.#dumped) {
@@ -21797,24 +21797,24 @@ var require_dns = __commonJS({
     var DecoratorHandler = require_decorator_handler();
     var { InvalidArgumentError, InformationalError } = require_errors2();
     var maxInt = Math.pow(2, 31) - 1;
-    function hasSafeIterator(headers) {
-      const prototype = Object.getPrototypeOf(headers);
-      const ownIterator = Object.prototype.hasOwnProperty.call(headers, Symbol.iterator);
-      return ownIterator || prototype != null && prototype !== Object.prototype && typeof headers[Symbol.iterator] === "function";
+    function hasSafeIterator(headers2) {
+      const prototype = Object.getPrototypeOf(headers2);
+      const ownIterator = Object.prototype.hasOwnProperty.call(headers2, Symbol.iterator);
+      return ownIterator || prototype != null && prototype !== Object.prototype && typeof headers2[Symbol.iterator] === "function";
     }
     function isHostHeader(key) {
       return typeof key === "string" && key.toLowerCase() === "host";
     }
-    function normalizeHeaders(headers) {
-      if (headers == null) {
+    function normalizeHeaders(headers2) {
+      if (headers2 == null) {
         return null;
       }
-      if (Array.isArray(headers)) {
-        if (headers.length === 0 || !Array.isArray(headers[0])) {
-          return headers;
+      if (Array.isArray(headers2)) {
+        if (headers2.length === 0 || !Array.isArray(headers2[0])) {
+          return headers2;
         }
         const normalized = [];
-        for (const header of headers) {
+        for (const header of headers2) {
           if (Array.isArray(header) && header.length === 2) {
             normalized.push(header[0], header[1]);
           } else {
@@ -21823,9 +21823,9 @@ var require_dns = __commonJS({
         }
         return normalized;
       }
-      if (typeof headers === "object" && hasSafeIterator(headers)) {
+      if (typeof headers2 === "object" && hasSafeIterator(headers2)) {
         const normalized = [];
-        for (const header of headers) {
+        for (const header of headers2) {
           if (Array.isArray(header) && header.length === 2) {
             normalized.push(header[0], header[1]);
           } else {
@@ -21834,25 +21834,25 @@ var require_dns = __commonJS({
         }
         return normalized;
       }
-      return headers;
+      return headers2;
     }
-    function hasHostHeader(headers) {
-      if (headers == null) {
+    function hasHostHeader(headers2) {
+      if (headers2 == null) {
         return false;
       }
-      if (Array.isArray(headers)) {
-        if (headers.length === 0) {
+      if (Array.isArray(headers2)) {
+        if (headers2.length === 0) {
           return false;
         }
-        for (let i = 0; i < headers.length; i += 2) {
-          if (isHostHeader(headers[i])) {
+        for (let i = 0; i < headers2.length; i += 2) {
+          if (isHostHeader(headers2[i])) {
             return true;
           }
         }
         return false;
       }
-      if (typeof headers === "object") {
-        for (const key in headers) {
+      if (typeof headers2 === "object") {
+        for (const key in headers2) {
           if (isHostHeader(key)) {
             return true;
           }
@@ -21860,8 +21860,8 @@ var require_dns = __commonJS({
       }
       return false;
     }
-    function withHostHeader(host, headers) {
-      const normalizedHeaders = normalizeHeaders(headers);
+    function withHostHeader(host, headers2) {
+      const normalizedHeaders = normalizeHeaders(headers2);
       if (hasHostHeader(normalizedHeaders)) {
         return normalizedHeaders;
       }
@@ -22364,24 +22364,24 @@ var require_cache = __commonJS({
         headers: opts.headers
       };
     }
-    function appendHeader(headers, key, val) {
+    function appendHeader(headers2, key, val) {
       const headerName = key.toLowerCase();
-      const current = headers[headerName];
+      const current = headers2[headerName];
       const values = Array.isArray(val) ? val : [val];
       if (current === void 0) {
-        headers[headerName] = Array.isArray(val) ? val.slice() : val;
+        headers2[headerName] = Array.isArray(val) ? val.slice() : val;
       } else if (Array.isArray(current)) {
         current.push(...values);
       } else {
-        headers[headerName] = [current, ...values];
+        headers2[headerName] = [current, ...values];
       }
     }
     function normalizeHeaders(opts) {
-      let headers;
+      let headers2;
       if (opts.headers == null) {
-        headers = {};
+        headers2 = {};
       } else if (typeof opts.headers === "object") {
-        headers = {};
+        headers2 = {};
         if (hasSafeIterator(opts.headers)) {
           for (const x of opts.headers) {
             if (!Array.isArray(x)) {
@@ -22391,17 +22391,17 @@ var require_cache = __commonJS({
             if (typeof key !== "string" || typeof val !== "string") {
               throw new Error("opts.headers is not a valid header map");
             }
-            appendHeader(headers, key, val);
+            appendHeader(headers2, key, val);
           }
         } else {
           for (const key of Object.keys(opts.headers)) {
-            appendHeader(headers, key, opts.headers[key]);
+            appendHeader(headers2, key, opts.headers[key]);
           }
         }
       } else {
         throw new Error("opts.headers is not an object");
       }
-      return headers;
+      return headers2;
     }
     function assertCacheKey(key) {
       if (typeof key !== "object") {
@@ -22542,11 +22542,11 @@ var require_cache = __commonJS({
                   break;
                 }
                 i = lastQuotedPart;
-                const headers = fieldList.split(",");
+                const headers2 = fieldList.split(",");
                 let validFieldNames = true;
-                for (let j = 0; j < headers.length; j++) {
-                  headers[j] = trimOWS(headers[j]);
-                  if (!isValidHTTPToken(headers[j])) {
+                for (let j = 0; j < headers2.length; j++) {
+                  headers2[j] = trimOWS(headers2[j]);
+                  if (!isValidHTTPToken(headers2[j])) {
                     validFieldNames = false;
                   }
                 }
@@ -22554,9 +22554,9 @@ var require_cache = __commonJS({
                   output[key] = true;
                 } else if (output[key] !== true) {
                   if (key in output) {
-                    output[key] = output[key].concat(headers);
+                    output[key] = output[key].concat(headers2);
                   } else {
-                    output[key] = headers;
+                    output[key] = headers2;
                   }
                 }
               } else {
@@ -22621,9 +22621,9 @@ var require_cache = __commonJS({
       }
       return false;
     }
-    function parseVaryHeader(varyHeader, headers) {
+    function parseVaryHeader(varyHeader, headers2) {
       if (hasVaryStar(varyHeader)) {
-        return headers;
+        return headers2;
       }
       const output = (
         /** @type {Record<string, string | string[] | null>} */
@@ -22638,7 +22638,7 @@ var require_cache = __commonJS({
         if (!isValidHTTPToken(trimmedHeader)) {
           return void 0;
         }
-        const headerValue = headers[trimmedHeader];
+        const headerValue = headers2[trimmedHeader];
         output[trimmedHeader] = Array.isArray(headerValue) ? headerValue.slice() : headerValue ?? null;
       }
       return output;
@@ -22682,17 +22682,17 @@ var require_cache = __commonJS({
       }
     }
     function makeDeduplicationKey(cacheKey, excludeHeaders) {
-      const headers = {};
+      const headers2 = {};
       if (cacheKey.headers) {
         const sortedHeaders = Object.keys(cacheKey.headers).sort();
         for (const header of sortedHeaders) {
           if (excludeHeaders?.has(header.toLowerCase())) {
             continue;
           }
-          headers[header] = cacheKey.headers[header];
+          headers2[header] = cacheKey.headers[header];
         }
       }
-      return JSON.stringify([cacheKey.origin, cacheKey.method, cacheKey.path, headers]);
+      return JSON.stringify([cacheKey.origin, cacheKey.method, cacheKey.path, headers2]);
     }
     module.exports = {
       makeCacheKey,
@@ -23360,8 +23360,8 @@ var require_cache_handler = __commonJS({
         this.#writeStream = void 0;
         this.#handler.onRequestStart?.(controller, context);
       }
-      onRequestUpgrade(controller, statusCode, headers, socket) {
-        this.#handler.onRequestUpgrade?.(controller, statusCode, headers, socket);
+      onRequestUpgrade(controller, statusCode, headers2, socket) {
+        this.#handler.onRequestUpgrade?.(controller, statusCode, headers2, socket);
       }
       /**
        * @param {import('../../types/dispatcher.d.ts').default.DispatchController} controller
@@ -23973,13 +23973,13 @@ var require_cache_revalidation_handler = __commonJS({
         this.#successful = false;
         this.#context = context;
       }
-      onRequestUpgrade(controller, statusCode, headers, socket) {
-        this.#handler.onRequestUpgrade?.(controller, statusCode, headers, socket);
+      onRequestUpgrade(controller, statusCode, headers2, socket) {
+        this.#handler.onRequestUpgrade?.(controller, statusCode, headers2, socket);
       }
-      onResponseStart(controller, statusCode, headers, statusMessage) {
+      onResponseStart(controller, statusCode, headers2, statusMessage) {
         assert2(this.#callback != null);
         this.#successful = statusCode === 304 || this.#allowErrorStatusCodes && statusCode >= 500 && statusCode <= 504;
-        this.#callback(this.#successful, this.#context, statusCode, headers);
+        this.#callback(this.#successful, this.#context, statusCode, headers2);
         this.#callback = null;
         if (this.#successful) {
           return true;
@@ -23988,7 +23988,7 @@ var require_cache_revalidation_handler = __commonJS({
         this.#handler.onResponseStart?.(
           controller,
           statusCode,
-          headers,
+          headers2,
           statusMessage
         );
       }
@@ -24061,8 +24061,8 @@ var require_cache2 = __commonJS({
       }
       return false;
     }
-    function hasPragmaNoCache(headers) {
-      const pragma = headers?.pragma;
+    function hasPragmaNoCache(headers2) {
+      const pragma = headers2?.pragma;
       if (!pragma) {
         return false;
       }
@@ -24081,14 +24081,14 @@ var require_cache2 = __commonJS({
       }
       return false;
     }
-    function needsRevalidation(result, cacheControlDirectives, { headers = {} }) {
+    function needsRevalidation(result, cacheControlDirectives, { headers: headers2 = {} }) {
       if (cacheControlDirectives?.["no-cache"]) {
         return true;
       }
       if (result.cacheControlDirectives?.["no-cache"] && !Array.isArray(result.cacheControlDirectives["no-cache"])) {
         return true;
       }
-      if (headers["if-modified-since"] || headers["if-none-match"]) {
+      if (headers2["if-modified-since"] || headers2["if-none-match"]) {
         return true;
       }
       return false;
@@ -24098,19 +24098,19 @@ var require_cache2 = __commonJS({
       // s-maxage implies proxy-revalidate for shared caches.
       result.cacheControlDirectives?.["s-maxage"] !== void 0);
     }
-    function revalidationResponseDisallowsCachedReuse(cacheType, headers) {
-      if (headers.vary && isInvalidOrWildcardVaryHeader(headers.vary)) {
+    function revalidationResponseDisallowsCachedReuse(cacheType, headers2) {
+      if (headers2.vary && isInvalidOrWildcardVaryHeader(headers2.vary)) {
         return true;
       }
-      const cacheControl = headers["cache-control"];
+      const cacheControl = headers2["cache-control"];
       if (!cacheControl) {
         return false;
       }
       const cacheControlDirectives = parseCacheControlHeader(cacheControl);
       return cacheControlDirectives["no-store"] === true || cacheType === "shared" && cacheControlDirectives.private === true;
     }
-    function revalidationResponseUpdatesCacheControl(headers) {
-      return headers["cache-control"] !== void 0;
+    function revalidationResponseUpdatesCacheControl(headers2) {
+      return headers2["cache-control"] !== void 0;
     }
     function deleteCachedValue(store, cacheKey) {
       try {
@@ -24118,28 +24118,28 @@ var require_cache2 = __commonJS({
       } catch {
       }
     }
-    function getUsableLastModified(headers) {
-      const lastModified = headers?.["last-modified"];
+    function getUsableLastModified(headers2) {
+      const lastModified = headers2?.["last-modified"];
       if (typeof lastModified === "string" && parseHttpDate(lastModified)) {
         return lastModified;
       }
     }
     function makeRevalidationHeaders(opts, result) {
-      const headers = {
+      const headers2 = {
         ...opts.headers,
         "if-modified-since": getUsableLastModified(result.headers) ?? new Date(result.cachedAt).toUTCString()
       };
       if (result.etag) {
-        headers["if-none-match"] = result.etag;
+        headers2["if-none-match"] = result.etag;
       }
       if (result.vary) {
         for (const key in result.vary) {
           if (result.vary[key] != null) {
-            headers[key] = result.vary[key];
+            headers2[key] = result.vary[key];
           }
         }
       }
-      return headers;
+      return headers2;
     }
     function isStale(result, cacheControlDirectives, cacheType) {
       const now = Date.now();
@@ -24237,11 +24237,11 @@ var require_cache2 = __commonJS({
       if (stream.destroyed) {
         return;
       }
-      const headers = { ...result.headers, age: String(age) };
+      const headers2 = { ...result.headers, age: String(age) };
       if (isStale2) {
-        headers.warning = '110 - "response is stale"';
+        headers2.warning = '110 - "response is stale"';
       }
-      handler.onResponseStart?.(controller, result.statusCode, headers, result.statusMessage);
+      handler.onResponseStart?.(controller, result.statusCode, headers2, result.statusMessage);
       if (opts.method === "HEAD") {
         stream.destroy();
       } else {
@@ -24269,11 +24269,11 @@ var require_cache2 = __commonJS({
         if (!revalidate && withinStaleWhileRevalidateWindow(result, globalOpts.type)) {
           sendCachedValue(handler, opts, result, age, null, true);
           queueMicrotask(() => {
-            const headers2 = makeRevalidationHeaders(opts, result);
+            const headers3 = makeRevalidationHeaders(opts, result);
             dispatch(
               {
                 ...opts,
-                headers: headers2
+                headers: headers3
               },
               new CacheHandler(globalOpts, cacheKey, {
                 // Silent handler that just updates the cache
@@ -24301,24 +24301,24 @@ var require_cache2 = __commonJS({
             withinStaleIfErrorThreshold = now < result.staleAt + staleIfErrorExpiry * 1e3;
           }
         }
-        const headers = makeRevalidationHeaders(opts, result);
+        const headers2 = makeRevalidationHeaders(opts, result);
         return dispatch(
           {
             ...opts,
-            headers
+            headers: headers2
           },
           new CacheRevalidationHandler(
-            (success3, context, statusCode, headers2) => {
+            (success3, context, statusCode, headers3) => {
               if (success3) {
                 if (statusCode === 304) {
-                  if (revalidationResponseDisallowsCachedReuse(globalOpts.type, headers2)) {
+                  if (revalidationResponseDisallowsCachedReuse(globalOpts.type, headers3)) {
                     if (util2.isStream(result.body)) {
                       result.body.on("error", nop).destroy();
                     }
                     deleteCachedValue(globalOpts.store, cacheKey);
                     return dispatch(opts, new CacheHandler(globalOpts, cacheKey, handler));
                   }
-                  if (revalidationResponseUpdatesCacheControl(headers2)) {
+                  if (revalidationResponseUpdatesCacheControl(headers3)) {
                     deleteCachedValue(globalOpts.store, cacheKey);
                   }
                 }
@@ -24567,18 +24567,18 @@ var require_decompress = __commonJS({
        * @param {string} statusMessage
        * @returns {void}
        */
-      onResponseStart(controller, statusCode, headers, statusMessage) {
-        const contentEncoding = headers["content-encoding"];
+      onResponseStart(controller, statusCode, headers2, statusMessage) {
+        const contentEncoding = headers2["content-encoding"];
         if (this.#shouldSkipDecompression(contentEncoding, statusCode)) {
-          return super.onResponseStart(controller, statusCode, headers, statusMessage);
+          return super.onResponseStart(controller, statusCode, headers2, statusMessage);
         }
         const decompressors = this.#createDecompressionChain(contentEncoding.toLowerCase());
         if (decompressors.length === 0) {
           this.#cleanupDecompressors();
-          return super.onResponseStart(controller, statusCode, headers, statusMessage);
+          return super.onResponseStart(controller, statusCode, headers2, statusMessage);
         }
         this.#decompressors = decompressors;
-        const { "content-encoding": _, "content-length": __, ...newHeaders } = headers;
+        const { "content-encoding": _, "content-length": __, ...newHeaders } = headers2;
         if (this.#decompressors.length === 1) {
           this.#setupSingleDecompressor(controller);
         } else {
@@ -24760,8 +24760,8 @@ var require_deduplication_handler = __commonJS({
        * @param {import('../../types/header.d.ts').IncomingHttpHeaders} headers
        * @param {Socket} socket
        */
-      onRequestUpgrade(controller, statusCode, headers, socket) {
-        this.#primaryHandler.onRequestUpgrade?.(controller, statusCode, headers, socket);
+      onRequestUpgrade(controller, statusCode, headers2, socket) {
+        this.#primaryHandler.onRequestUpgrade?.(controller, statusCode, headers2, socket);
       }
       /**
        * @param {import('../../types/dispatcher.d.ts').default.DispatchController} controller
@@ -24769,12 +24769,12 @@ var require_deduplication_handler = __commonJS({
        * @param {Record<string, string | string[]>} headers
        * @param {string} statusMessage
        */
-      onResponseStart(controller, statusCode, headers, statusMessage) {
+      onResponseStart(controller, statusCode, headers2, statusMessage) {
         this.#responseStarted = true;
         this.#statusCode = statusCode;
-        this.#headers = headers;
+        this.#headers = headers2;
         this.#statusMessage = statusMessage;
-        this.#primaryHandler.onResponseStart?.(controller, statusCode, headers, statusMessage);
+        this.#primaryHandler.onResponseStart?.(controller, statusCode, headers2, statusMessage);
         for (const waitingHandler of this.#waitingHandlers) {
           const { handler, controller: waitingController } = waitingHandler;
           if (waitingHandler.done || waitingController.aborted) {
@@ -24785,7 +24785,7 @@ var require_deduplication_handler = __commonJS({
             handler.onResponseStart?.(
               waitingController,
               statusCode,
-              headers,
+              headers2,
               statusMessage
             );
           } catch {
@@ -25403,7 +25403,7 @@ var require_sqlite_cache_store = __commonJS({
        */
       #findValue(key, canBeExpired = false) {
         const url2 = this.#makeValueUrl(key);
-        const { headers, method } = key;
+        const { headers: headers2, method } = key;
         const values = this.#getValuesQuery.all(url2, method);
         if (values.length === 0) {
           return void 0;
@@ -25417,7 +25417,7 @@ var require_sqlite_cache_store = __commonJS({
           if (value.vary) {
             const vary = JSON.parse(value.vary);
             for (const header in vary) {
-              if (!headerValueEquals(headers[header], vary[header])) {
+              if (!headerValueEquals(headers2[header], vary[header])) {
                 matches = false;
                 break;
               }
@@ -25477,7 +25477,7 @@ var require_headers = __commonJS({
       while (j > i && isHTTPWhiteSpaceCharCode(potentialValue.charCodeAt(i))) ++i;
       return i === 0 && j === potentialValue.length ? potentialValue : potentialValue.substring(i, j);
     }
-    function fill(headers, object3) {
+    function fill(headers2, object3) {
       if (Array.isArray(object3)) {
         for (let i = 0; i < object3.length; ++i) {
           const header = object3[i];
@@ -25487,12 +25487,12 @@ var require_headers = __commonJS({
               message: `expected name/value pair to be length 2, found ${header.length}.`
             });
           }
-          appendHeader(headers, header[0], header[1]);
+          appendHeader(headers2, header[0], header[1]);
         }
       } else if (typeof object3 === "object" && object3 !== null) {
         const keys = Object.keys(object3);
         for (let i = 0; i < keys.length; ++i) {
-          appendHeader(headers, keys[i], object3[keys[i]]);
+          appendHeader(headers2, keys[i], object3[keys[i]]);
         }
       } else {
         throw webidl.errors.conversionFailed({
@@ -25502,7 +25502,7 @@ var require_headers = __commonJS({
         });
       }
     }
-    function appendHeader(headers, name, value) {
+    function appendHeader(headers2, name, value) {
       value = headerValueNormalize(value);
       if (!isValidHeaderName(name)) {
         throw webidl.errors.invalidArgument({
@@ -25517,10 +25517,10 @@ var require_headers = __commonJS({
           type: "header value"
         });
       }
-      if (getHeadersGuard(headers) === "immutable") {
+      if (getHeadersGuard(headers2) === "immutable") {
         throw new TypeError("immutable");
       }
-      return getHeadersList(headers).append(name, value, false);
+      return getHeadersList(headers2).append(name, value, false);
     }
     function headersListSortAndCombine(target) {
       const headersList = getHeadersList(target);
@@ -25530,7 +25530,7 @@ var require_headers = __commonJS({
       if (headersList.sortedMap) {
         return headersList.sortedMap;
       }
-      const headers = [];
+      const headers2 = [];
       const names = headersList.toSortedArray();
       const cookies = headersList.cookies;
       if (cookies === null || cookies.length === 1) {
@@ -25540,13 +25540,13 @@ var require_headers = __commonJS({
         const { 0: name, 1: value } = names[i];
         if (name === "set-cookie") {
           for (let j = 0; j < cookies.length; ++j) {
-            headers.push([name, cookies[j]]);
+            headers2.push([name, cookies[j]]);
           }
         } else {
-          headers.push([name, value]);
+          headers2.push([name, value]);
         }
       }
-      return headersList.sortedMap = headers;
+      return headersList.sortedMap = headers2;
     }
     function compareHeaderName(a, b) {
       return a[0] < b[0] ? -1 : 1;
@@ -25644,31 +25644,31 @@ var require_headers = __commonJS({
         }
       }
       get entries() {
-        const headers = {};
+        const headers2 = {};
         if (this.headersMap.size !== 0) {
           for (const { name, value } of this.headersMap.values()) {
-            headers[name] = value;
+            headers2[name] = value;
           }
         }
-        return headers;
+        return headers2;
       }
       rawValues() {
         return this.headersMap.values();
       }
       get entriesList() {
-        const headers = [];
+        const headers2 = [];
         if (this.headersMap.size !== 0) {
           for (const { 0: lowerName, 1: { name, value } } of this.headersMap) {
             if (lowerName === "set-cookie") {
               for (const cookie of this.cookies) {
-                headers.push([name, cookie]);
+                headers2.push([name, cookie]);
               }
             } else {
-              headers.push([name, value]);
+              headers2.push([name, value]);
             }
           }
         }
-        return headers;
+        return headers2;
       }
       // https://fetch.spec.whatwg.org/#convert-header-names-to-a-sorted-lowercase-set
       toSortedArray() {
@@ -26269,10 +26269,10 @@ var require_response = __commonJS({
     function fromInnerResponse(innerResponse, guard) {
       const response = new Response(kConstruct);
       setResponseState(response, innerResponse);
-      const headers = new Headers(kConstruct);
-      setResponseHeaders(response, headers);
-      setHeadersList(headers, innerResponse.headersList);
-      setHeadersGuard(headers, guard);
+      const headers2 = new Headers(kConstruct);
+      setResponseHeaders(response, headers2);
+      setHeadersList(headers2, innerResponse.headersList);
+      setHeadersGuard(headers2, guard);
       if (innerResponse.urlList.length !== 0 && innerResponse.body?.stream) {
         streamRegistry.register(response, new WeakRef(innerResponse.body.stream));
       }
@@ -26623,15 +26623,15 @@ var require_request2 = __commonJS({
         }
         if (initHasKey) {
           const headersList = getHeadersList(this.#headers);
-          const headers = init.headers !== void 0 ? init.headers : new HeadersList(headersList);
+          const headers2 = init.headers !== void 0 ? init.headers : new HeadersList(headersList);
           headersList.clear();
-          if (headers instanceof HeadersList) {
-            for (const { name, value } of headers.rawValues()) {
+          if (headers2 instanceof HeadersList) {
+            for (const { name, value } of headers2.rawValues()) {
               headersList.append(name, value, false);
             }
-            headersList.cookies = headers.cookies;
+            headersList.cookies = headers2.cookies;
           } else {
-            fillHeaders(this.#headers, headers);
+            fillHeaders(this.#headers, headers2);
           }
         }
         const inputBody = webidl.is.Request(input) ? input.#state.body : null;
@@ -26951,10 +26951,10 @@ var require_request2 = __commonJS({
       setRequestState(request, innerRequest);
       setRequestDispatcher(request, dispatcher);
       setRequestSignal(request, signal);
-      const headers = new Headers(kConstruct);
-      setRequestHeaders(request, headers);
-      setHeadersList(headers, innerRequest.headersList);
-      setHeadersGuard(headers, guard);
+      const headers2 = new Headers(kConstruct);
+      setRequestHeaders(request, headers2);
+      setHeadersList(headers2, innerRequest.headersList);
+      setHeadersGuard(headers2, guard);
       return request;
     }
     Object.defineProperties(Request.prototype, {
@@ -28312,12 +28312,12 @@ var require_fetch = __commonJS({
               fetchParams.controller.terminate(error51);
               reject(error51);
             },
-            onRequestUpgrade(_controller, status, headers, socket) {
+            onRequestUpgrade(_controller, status, headers2, socket) {
               if (socket.session != null && status !== 200 || socket.session == null && status !== 101) {
                 return false;
               }
               const headersList = new HeadersList();
-              for (const [name, value] of Object.entries(headers)) {
+              for (const [name, value] of Object.entries(headers2)) {
                 if (value == null) {
                   continue;
                 }
@@ -29430,10 +29430,10 @@ var require_cookies = __commonJS({
     var { webidl } = require_webidl();
     var { Headers } = require_headers();
     var brandChecks = webidl.brandCheckMultiple([Headers, globalThis.Headers].filter(Boolean));
-    function getCookies(headers) {
+    function getCookies(headers2) {
       webidl.argumentLengthCheck(arguments, 1, "getCookies");
-      brandChecks(headers);
-      const cookie = headers.get("cookie");
+      brandChecks(headers2);
+      const cookie = headers2.get("cookie");
       const out = {};
       if (!cookie) {
         return out;
@@ -29444,23 +29444,23 @@ var require_cookies = __commonJS({
       }
       return out;
     }
-    function deleteCookie(headers, name, attributes) {
-      brandChecks(headers);
+    function deleteCookie(headers2, name, attributes) {
+      brandChecks(headers2);
       const prefix = "deleteCookie";
       webidl.argumentLengthCheck(arguments, 2, prefix);
       name = webidl.converters.DOMString(name, prefix, "name");
       attributes = webidl.converters.DeleteCookieAttributes(attributes);
-      setCookie(headers, {
+      setCookie(headers2, {
         name,
         value: "",
         expires: /* @__PURE__ */ new Date(0),
         ...attributes
       });
     }
-    function getSetCookies(headers) {
+    function getSetCookies(headers2) {
       webidl.argumentLengthCheck(arguments, 1, "getSetCookies");
-      brandChecks(headers);
-      const cookies = headers.getSetCookie();
+      brandChecks(headers2);
+      const cookies = headers2.getSetCookie();
       if (!cookies) {
         return [];
       }
@@ -29470,13 +29470,13 @@ var require_cookies = __commonJS({
       cookie = webidl.converters.DOMString(cookie);
       return parseSetCookie(cookie);
     }
-    function setCookie(headers, cookie) {
+    function setCookie(headers2, cookie) {
       webidl.argumentLengthCheck(arguments, 2, "setCookie");
-      brandChecks(headers);
+      brandChecks(headers2);
       cookie = webidl.converters.Cookie(cookie);
       const str = stringify(cookie);
       if (str) {
-        headers.append("set-cookie", str, true);
+        headers2.append("set-cookie", str, true);
       }
     }
     webidl.converters.DeleteCookieAttributes = webidl.dictionaryConverter([
@@ -31157,7 +31157,7 @@ var require_websocket = __commonJS({
         }
         fireEvent("open", this);
         if (channels.open.hasSubscribers) {
-          const headers = response.headersList.entries;
+          const headers2 = response.headersList.entries;
           channels.open.publish({
             address: getSocketAddress(response.socket),
             protocol: this.#protocol,
@@ -31166,7 +31166,7 @@ var require_websocket = __commonJS({
             handshakeResponse: {
               status: response.status,
               statusText: response.statusText,
-              headers
+              headers: headers2
             }
           });
         }
@@ -35326,10 +35326,10 @@ var require_websocket2 = __commonJS({
           websocket._originalIpc = isIpcUrl;
           websocket._originalSecure = isSecure;
           websocket._originalHostOrSocketPath = isIpcUrl ? opts.socketPath : parsedUrl.host;
-          const headers = options && options.headers;
+          const headers2 = options && options.headers;
           options = { ...options, headers: {} };
-          if (headers) {
-            for (const [key2, value] of Object.entries(headers)) {
+          if (headers2) {
+            for (const [key2, value] of Object.entries(headers2)) {
               options.headers[key2.toLowerCase()] = value;
             }
           }
@@ -36032,9 +36032,9 @@ var require_websocket_server = __commonJS({
             req
           };
           if (this.options.verifyClient.length === 2) {
-            this.options.verifyClient(info, (verified, code, message, headers) => {
+            this.options.verifyClient(info, (verified, code, message, headers2) => {
               if (!verified) {
-                return abortHandshake(socket, code || 401, message, headers);
+                return abortHandshake(socket, code || 401, message, headers2);
               }
               this.completeUpgrade(
                 extensions,
@@ -36074,7 +36074,7 @@ var require_websocket_server = __commonJS({
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
         const digest = createHash6("sha1").update(key + GUID).digest("base64");
-        const headers = [
+        const headers2 = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
           "Connection: Upgrade",
@@ -36084,7 +36084,7 @@ var require_websocket_server = __commonJS({
         if (protocols.size) {
           const protocol = this.options.handleProtocols ? this.options.handleProtocols(protocols, req) : protocols.values().next().value;
           if (protocol) {
-            headers.push(`Sec-WebSocket-Protocol: ${protocol}`);
+            headers2.push(`Sec-WebSocket-Protocol: ${protocol}`);
             ws._protocol = protocol;
           }
         }
@@ -36093,11 +36093,11 @@ var require_websocket_server = __commonJS({
           const value = extension2.format({
             [PerMessageDeflate2.extensionName]: [params]
           });
-          headers.push(`Sec-WebSocket-Extensions: ${value}`);
+          headers2.push(`Sec-WebSocket-Extensions: ${value}`);
           ws._extensions = extensions;
         }
-        this.emit("headers", headers, req);
-        socket.write(headers.concat("\r\n").join("\r\n"));
+        this.emit("headers", headers2, req);
+        socket.write(headers2.concat("\r\n").join("\r\n"));
         socket.removeListener("error", socketOnError);
         ws.setSocket(socket, head, {
           allowSynchronousEvents: this.options.allowSynchronousEvents,
@@ -36134,27 +36134,27 @@ var require_websocket_server = __commonJS({
     function socketOnError() {
       this.destroy();
     }
-    function abortHandshake(socket, code, message, headers) {
+    function abortHandshake(socket, code, message, headers2) {
       message = message || http.STATUS_CODES[code];
-      headers = {
+      headers2 = {
         Connection: "close",
         "Content-Type": "text/html",
         "Content-Length": Buffer.byteLength(message),
-        ...headers
+        ...headers2
       };
       socket.once("finish", socket.destroy);
       socket.end(
         `HTTP/1.1 ${code} ${http.STATUS_CODES[code]}\r
-` + Object.keys(headers).map((h) => `${h}: ${headers[h]}`).join("\r\n") + "\r\n\r\n" + message
+` + Object.keys(headers2).map((h) => `${h}: ${headers2[h]}`).join("\r\n") + "\r\n\r\n" + message
       );
     }
-    function abortHandshakeOrEmitwsClientError(server2, req, socket, code, message, headers) {
+    function abortHandshakeOrEmitwsClientError(server2, req, socket, code, message, headers2) {
       if (server2.listenerCount("wsClientError")) {
         const err = new Error(message);
         Error.captureStackTrace(err, abortHandshakeOrEmitwsClientError);
         server2.emit("wsClientError", err, socket, req);
       } else {
-        abortHandshake(socket, code, message, headers);
+        abortHandshake(socket, code, message, headers2);
       }
     }
   }
@@ -50831,8 +50831,8 @@ function _overwrite(tx) {
   });
 }
 // @__NO_SIDE_EFFECTS__
-function _normalize(form2) {
-  return /* @__PURE__ */ _overwrite((input) => input.normalize(form2));
+function _normalize(form) {
+  return /* @__PURE__ */ _overwrite((input) => input.normalize(form));
 }
 // @__NO_SIDE_EFFECTS__
 function _trim() {
@@ -60571,15 +60571,26 @@ function canonicalJson(value) {
 function digestJson(value) {
   return createHash("sha256").update(canonicalJson(value)).digest("hex");
 }
+function segment(key) {
+  return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key) ? `.${key}` : `[${JSON.stringify(key)}]`;
+}
 function diffJson(before, after, path = "$") {
   if (canonicalJson(before) === canonicalJson(after)) {
     return [];
+  }
+  if (Array.isArray(before) && Array.isArray(after)) {
+    const entries = [];
+    const length = Math.max(before.length, after.length);
+    for (let index = 0; index < length; index += 1) {
+      entries.push(...diffJson(before[index], after[index], `${path}[${index}]`));
+    }
+    return entries;
   }
   if (before && after && typeof before === "object" && typeof after === "object" && !Array.isArray(before) && !Array.isArray(after)) {
     const left = before;
     const right = after;
     const keys = [.../* @__PURE__ */ new Set([...Object.keys(left), ...Object.keys(right)])].sort();
-    return keys.flatMap((key) => diffJson(left[key], right[key], `${path}.${key}`));
+    return keys.flatMap((key) => diffJson(left[key], right[key], `${path}${segment(key)}`));
   }
   const entry = { path };
   if (before !== void 0) {
@@ -61268,8 +61279,10 @@ var TransactionManager = class {
   #changes = /* @__PURE__ */ new Map();
   #rollbackDirectory;
   #applying = false;
-  constructor(rollbackDirectory = join(homedir(), ".mijiaflow", "backups")) {
-    this.#rollbackDirectory = rollbackDirectory;
+  #onProgress;
+  constructor(onProgressOrDirectory, rollbackDirectory = join(homedir(), ".mijiaflow", "backups")) {
+    this.#onProgress = typeof onProgressOrDirectory === "function" ? onProgressOrDirectory : void 0;
+    this.#rollbackDirectory = typeof onProgressOrDirectory === "string" ? onProgressOrDirectory : rollbackDirectory;
   }
   clear() {
     this.#plans.clear();
@@ -61277,6 +61290,7 @@ var TransactionManager = class {
     this.#changes.clear();
   }
   async plan(context, operation, payload) {
+    this.#onProgress?.({ stage: "plan", state: "running", summary: `\u751F\u6210 ${operation} \u53D8\u66F4\u8BA1\u5212` });
     if (context.probe.mode !== "read-write") {
       throw new MijiaFlowError("This gateway version is read-only", "READ_ONLY_VERSION");
     }
@@ -61300,7 +61314,7 @@ var TransactionManager = class {
       targetDigest
     };
     this.#plans.set(record2.token, record2);
-    return {
+    const result = {
       planToken: record2.token,
       operation: prepared.name,
       objectKey: prepared.objectKey,
@@ -61311,8 +61325,11 @@ var TransactionManager = class {
       confirmation: record2.confirmation,
       expiresAt: new Date(record2.expiresAt).toISOString()
     };
+    this.#onProgress?.({ stage: "plan", state: "succeeded", summary: prepared.summary, diff: result.diff });
+    return result;
   }
   async createBackup(context, fileName, outputDir, cloud) {
+    this.#onProgress?.({ stage: "backup", state: "running", summary: "\u8BFB\u53D6\u5E76\u5199\u5165\u5907\u4EFD\u6587\u4EF6" });
     this.#prune();
     if (cloud && context.probe.mode !== "read-write") {
       throw new MijiaFlowError("Cloud backup is disabled for an unknown gateway version", "READ_ONLY_VERSION");
@@ -61333,7 +61350,7 @@ var TransactionManager = class {
     this.#receipts.set(receipt.token, receipt);
     let cloudResult;
     if (cloud) {
-      const result = await context.api.createCloudBackup(safeFileName(fileName));
+      const result2 = await context.api.createCloudBackup(safeFileName(fileName));
       const after = await context.api.snapshot();
       const invariantDigests = {
         automationsBefore: digestJson(before.automations),
@@ -61347,23 +61364,23 @@ var TransactionManager = class {
         throw new MijiaFlowError("Business configuration changed during cloud backup", "BACKUP_INVARIANT_FAILED", invariantDigests);
       }
       const expectedContentDigests = backupContentDigests(document);
-      const downloadedContentDigests = backupContentDigests(result.document);
+      const downloadedContentDigests = backupContentDigests(result2.document);
       if (expectedContentDigests.automations !== downloadedContentDigests.automations || expectedContentDigests.variables !== downloadedContentDigests.variables) {
         throw new MijiaFlowError(
           "Downloaded cloud backup does not match the pre-backup automation and variable snapshot",
           "CLOUD_BACKUP_CONTENT_MISMATCH",
-          { expectedContentDigests, downloadedContentDigests, recordBinding: result.binding }
+          { expectedContentDigests, downloadedContentDigests, recordBinding: result2.binding }
         );
       }
       const downloaded = await writeVerifiedBackup(
-        result.document,
+        result2.document,
         outputDir,
         cloudFileName(safeFileName(fileName))
       );
       cloudResult = {
         status: "created-downloaded-verified",
-        record: result.record,
-        recordBinding: result.binding,
+        record: result2.record,
+        recordBinding: result2.binding,
         path: downloaded.path,
         fileDigest: downloaded.fileDigest,
         backupDigest: downloaded.backupDigest,
@@ -61371,7 +61388,7 @@ var TransactionManager = class {
         invariantDigests
       };
     }
-    return {
+    const result = {
       backupReceipt: receipt.token,
       path: local.path,
       bytes: local.bytes,
@@ -61381,8 +61398,11 @@ var TransactionManager = class {
       expiresAt: new Date(receipt.expiresAt).toISOString(),
       cloud: cloudResult ?? { status: "not-requested" }
     };
+    this.#onProgress?.({ stage: "backup", state: "succeeded", summary: "\u5907\u4EFD\u5DF2\u6821\u9A8C", result });
+    return result;
   }
   async apply(context, planToken, backupReceipt, suppliedConfirmation) {
+    this.#onProgress?.({ stage: "apply", state: "running", summary: "\u68C0\u67E5\u8BA1\u5212\u3001\u5907\u4EFD\u548C\u5F53\u524D\u57FA\u7EBF" });
     if (this.#applying) {
       throw new MijiaFlowError("Another MijiaFlow write is in progress", "WRITE_IN_PROGRESS");
     }
@@ -61423,6 +61443,7 @@ var TransactionManager = class {
       plan.consumed = true;
       try {
         await applyPreparedOperation(context.api, plan.operation);
+        this.#onProgress?.({ stage: "verify", state: "running", summary: "\u8BFB\u53D6\u56DE\u6267\u5E76\u9A8C\u8BC1\u7F51\u5173\u72B6\u6001" });
         const verified = await readPreparedObject(context.api, plan.operation);
         if (digestJson(verified) !== plan.targetDigest) {
           throw new MijiaFlowError("Gateway readback did not match the planned target", "WRITE_VERIFICATION_FAILED");
@@ -61460,7 +61481,7 @@ var TransactionManager = class {
         );
       }
       const change = this.#recordChange(context, plan.operation, plan.targetDigest, "applied");
-      return {
+      const result = {
         changeId: change.changeId,
         status: "applied-and-verified",
         beforeDigest: plan.baselineDigest,
@@ -61468,11 +61489,15 @@ var TransactionManager = class {
         rollbackConfirmation: change.rollbackConfirmation,
         rollbackExpiresAt: change.rollbackExpiresAt
       };
+      this.#onProgress?.({ stage: "verify", state: "succeeded", summary: "\u53D8\u66F4\u5DF2\u5E94\u7528\u5E76\u9A8C\u8BC1", result });
+      this.#onProgress?.({ stage: "apply", state: "succeeded", summary: "\u53D8\u66F4\u5DF2\u5E94\u7528\u5E76\u9A8C\u8BC1", result });
+      return result;
     } finally {
       this.#applying = false;
     }
   }
   async rollback(context, changeId, suppliedConfirmation) {
+    this.#onProgress?.({ stage: "rollback", state: "running", summary: "\u68C0\u67E5\u53D8\u66F4\u5E76\u521B\u5EFA\u56DE\u6EDA\u524D\u5907\u4EFD" });
     if (this.#applying) {
       throw new MijiaFlowError("Another MijiaFlow write is in progress", "WRITE_IN_PROGRESS");
     }
@@ -61511,12 +61536,14 @@ var TransactionManager = class {
         throw new MijiaFlowError("Rollback readback did not match the retained baseline", "ROLLBACK_VERIFICATION_FAILED");
       }
       change.consumed = true;
-      return {
+      const result = {
         changeId,
         status: "rolled-back-and-verified",
         restoredDigest,
         preRollbackBackup: rollbackBackup.path
       };
+      this.#onProgress?.({ stage: "rollback", state: "succeeded", summary: "\u5DF2\u56DE\u6EDA\u5E76\u9A8C\u8BC1", result });
+      return result;
     } finally {
       this.#applying = false;
     }
@@ -64727,7 +64754,7 @@ var GatewayClient = class {
       const error51 = rpc.error;
       pending.reject(
         new MijiaFlowError(
-          typeof error51?.message === "string" ? error51.message : "Gateway RPC failed",
+          "Gateway RPC failed",
           "GATEWAY_RPC_ERROR",
           typeof error51?.code === "number" ? { rpcCode: error51.code } : void 0
         )
@@ -64826,8 +64853,45 @@ var GatewayClient = class {
 import { createHash as createHash5, randomBytes as randomBytes6 } from "node:crypto";
 import { createServer } from "node:http";
 var MAX_BODY_BYTES = 1024;
-var DEFAULT_RESULT_TTL_MS = 6e4;
-var PAIRING_FORM_SCRIPT = `(() => {
+var PAIRING_TTL_MS = 15 * 6e4;
+var WORKBENCH_SCRIPT = `(() => {
+  const root = document.getElementById("workbench");
+  const stateUrl = root.dataset.state;
+  const session = document.getElementById("session");
+  const operation = document.getElementById("operation");
+  const diff = document.getElementById("diff");
+  const updated = document.getElementById("updated");
+  const badge = document.getElementById("badge");
+  const labels = { none: "\u65E0\u4F1A\u8BDD", "awaiting-passcode": "\u7B49\u5F85\u767B\u5F55\u7801", authenticating: "\u8BA4\u8BC1\u4E2D", ready: "\u5DF2\u8FDE\u63A5", failed: "\u8FDE\u63A5\u5931\u8D25", running: "\u8FDB\u884C\u4E2D", succeeded: "\u5DF2\u5B8C\u6210", failedOp: "\u5931\u8D25" };
+  const sessionText = (value) => ({ none: "\u5C1A\u672A\u5F00\u59CB", "awaiting-passcode": "\u7B49\u5F85\u5728\u672C\u673A\u8F93\u5165\u767B\u5F55\u7801", authenticating: "\u6B63\u5728\u5EFA\u7ACB\u5B89\u5168\u8FDE\u63A5", ready: "\u5B89\u5168\u4F1A\u8BDD\u5DF2\u5C31\u7EEA", failed: "\u4F1A\u8BDD\u5DF2\u7ED3\u675F\uFF0C\u8BF7\u56DE\u5230 Codex \u91CD\u65B0\u5F00\u59CB" }[value] || "\u4F1A\u8BDD\u72B6\u6001\u672A\u77E5");
+  const render = (data) => {
+    const s = data.session || { state: "none" };
+    const op = data.operation;
+    session.textContent = sessionText(s.state) + (s.mode ? " \xB7 " + (s.mode === "read-write" ? "\u53EF\u5199" : "\u53EA\u8BFB") : "");
+    badge.textContent = labels[s.state] || s.state;
+    badge.dataset.state = s.state;
+    if (op) {
+      operation.hidden = false;
+      operation.textContent = (op.summary || op.stage) + " \xB7 " + (op.state === "running" ? labels.running : op.state === "succeeded" ? labels.succeeded : labels.failedOp);
+      if (op.errorCode) operation.textContent += "\uFF08" + op.errorCode + "\uFF09";
+      diff.hidden = !op.diff?.length;
+      diff.textContent = op.diff?.length ? JSON.stringify(op.diff, null, 2) : "";
+    } else {
+      operation.hidden = true;
+      diff.hidden = true;
+    }
+    updated.textContent = data.updatedAt ? new Date(data.updatedAt).toLocaleTimeString() : "\u521A\u521A";
+  };
+  const poll = async () => {
+    try {
+      const response = await fetch(stateUrl, { cache: "no-store", credentials: "same-origin" });
+      if (response.ok) render(await response.json());
+    } catch {}
+    window.setTimeout(poll, 1200);
+  };
+  poll();
+})();`;
+var PAIRING_SCRIPT = `(() => {
   const form = document.getElementById("pairing-form");
   const input = document.getElementById("passcode");
   const slots = Array.from(document.querySelectorAll("[data-slot]"));
@@ -64835,283 +64899,52 @@ var PAIRING_FORM_SCRIPT = `(() => {
   const deleteKey = document.querySelector("[data-delete]");
   let value = "";
   let submitting = false;
-
-  const render = () => {
-    slots.forEach((slot, index) => {
-      slot.textContent = value[index] || "";
-      slot.classList.toggle("active", !submitting && index === value.length);
-      slot.classList.toggle("filled", index < value.length);
-    });
-    input.value = value;
-  };
-
-  const disableKeys = () => {
-    [...keys, deleteKey].forEach((key) => { if (key) key.disabled = true; });
-  };
-
-  const submitWhenComplete = () => {
-    if (value.length !== 6 || submitting) return;
-    submitting = true;
-    render();
-    disableKeys();
-    window.setTimeout(() => form.requestSubmit(), 120);
-  };
-
-  const append = (digit) => {
-    if (submitting || value.length >= 6) return;
-    value += digit;
-    render();
-    submitWhenComplete();
-  };
-
-  const remove = () => {
-    if (submitting || value.length === 0) return;
-    value = value.slice(0, -1);
-    render();
-  };
-
-  keys.forEach((key) => key.addEventListener("click", () => append(key.dataset.digit)));
-  deleteKey.addEventListener("click", remove);
-  document.addEventListener("keydown", (event) => {
-    if (/^[0-9]$/.test(event.key)) {
-      event.preventDefault();
-      append(event.key);
-    } else if (event.key === "Backspace" || event.key === "Delete") {
-      event.preventDefault();
-      remove();
-    } else if (event.key === "Enter" && event.target?.tagName !== "BUTTON") {
-      event.preventDefault();
-      submitWhenComplete();
-    }
-  });
-  document.addEventListener("paste", (event) => {
-    const pasted = event.clipboardData?.getData("text").trim() || "";
-    if (!/^d{6}$/.test(pasted) || submitting) return;
-    event.preventDefault();
-    value = pasted;
-    render();
-    submitWhenComplete();
-  });
-  form.addEventListener("submit", (event) => {
-    if (value.length !== 6) {
-      event.preventDefault();
-      return;
-    }
-    submitting = true;
-    render();
-    disableKeys();
-  });
+  const render = () => { slots.forEach((slot, index) => { slot.textContent = value[index] || ""; slot.classList.toggle("active", !submitting && index === value.length); slot.classList.toggle("filled", index < value.length); }); input.value = value; };
+  const submitWhenComplete = () => { if (value.length !== 6 || submitting) return; submitting = true; render(); [...keys, deleteKey].forEach((key) => { if (key) key.disabled = true; }); window.setTimeout(() => form.requestSubmit(), 120); };
+  keys.forEach((key) => key.addEventListener("click", () => { if (!submitting && value.length < 6) { value += key.dataset.digit; render(); submitWhenComplete(); } }));
+  deleteKey.addEventListener("click", () => { if (!submitting) { value = value.slice(0, -1); render(); } });
+  document.addEventListener("keydown", (event) => { if (/^[0-9]$/.test(event.key)) { event.preventDefault(); if (!submitting && value.length < 6) { value += event.key; render(); submitWhenComplete(); } } else if (event.key === "Backspace" || event.key === "Delete") { event.preventDefault(); if (!submitting) { value = value.slice(0, -1); render(); } } });
+  form.addEventListener("submit", (event) => { if (value.length !== 6) event.preventDefault(); });
   render();
 })();`;
-var PAIRING_FORM_SCRIPT_HASH = createHash5("sha256").update(PAIRING_FORM_SCRIPT).digest("base64");
+var STYLE = `:root{color-scheme:light;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:#f3f6fa;color:#17212b}*{box-sizing:border-box}body{margin:0;min-width:280px;min-height:100vh;background:#f3f6fa}main{min-height:100vh;display:grid;place-items:center;padding:32px 18px}.login{width:min(560px,100%);text-align:center}.login h1{margin:0;font-size:clamp(26px,6vw,36px)}.login p{color:#607080;line-height:1.6}.login-form{margin:28px auto 0;width:min(420px,100%)}.code-input{position:fixed;left:-10000px;width:1px;height:1px;opacity:0}.code-display{display:flex;justify-content:center;gap:18px;margin:30px 0}.digit-slot{width:28px;height:42px;border-bottom:2px solid #c7d2dd;font-size:30px;line-height:38px}.digit-slot.active{border-color:#2878a9}.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.key{height:60px;border:0;border-radius:10px;background:#fff;font:inherit;font-size:21px;box-shadow:0 2px 7px #17324a12}.key-delete{background:transparent;box-shadow:none}.privacy{font-size:12px}.workbench{width:min(900px,100%)}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}.top h1{margin:0;font-size:clamp(24px,5vw,34px)}.top p{margin:7px 0 0;color:#617181}.badge{padding:7px 12px;border-radius:999px;background:#dce8ef;color:#1e5874;font-size:13px;white-space:nowrap}.badge[data-state=ready]{background:#d9f1e1;color:#17633a}.badge[data-state=failed]{background:#f8dddd;color:#8a2d2d}.panel{background:#fff;border:1px solid #dce5eb;border-radius:10px;padding:20px;box-shadow:0 4px 18px #19384c0d}.panel h2{margin:0 0 8px;font-size:17px}.panel p{margin:0;color:#4b5e6c;line-height:1.6}.meta{margin-top:16px;font-size:12px;color:#82919d}.operation{margin-top:14px;padding:12px 14px;border-left:3px solid #4d9bc0;background:#f5f9fb;color:#2d5267;line-height:1.5}.diff{margin:14px 0 0;max-height:42vh;overflow:auto;padding:14px;background:#16222c;color:#dbe8ee;border-radius:7px;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;word-break:break-word}@media(max-width:560px){main{padding:22px 13px}.top{align-items:flex-start}.top h1{font-size:25px}.panel{padding:16px}.code-display{gap:13px}}`;
+function scriptHash(script) {
+  return createHash5("sha256").update(script).digest("base64");
+}
 function page(body, script = "") {
-  return `<!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta http-equiv="Cache-Control" content="no-store">
-  <title>MijiaFlow / \u7C73\u5BB6\u6D41</title>
-  <style>
-    :root {
-      color-scheme: light;
-      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
-      background: #f2f4fb;
-      color: #151515;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; min-width: 280px; min-height: 100vh; min-height: 100svh; background: #f2f4fb; }
-    main {
-      width: 100%;
-      min-height: 100vh;
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 24px;
-      text-align: center;
-    }
-    main > h1 { margin: 0 0 14px; font-size: 30px; line-height: 1.25; letter-spacing: 0; }
-    main > p { max-width: 520px; margin: 0; color: #5f6675; font-size: 16px; line-height: 1.7; }
-    .login-shell { width: 100%; }
-    .login-shell h1 { margin: 0; font-size: 32px; line-height: 1.25; font-weight: 700; letter-spacing: 0; }
-    .subtitle { margin: 18px 0 0; color: #5d6574; font-size: 17px; line-height: 1.5; }
-    .login-form { width: min(76vw, 752px); margin: 0 auto; }
-    .code-input {
-      position: fixed;
-      left: -10000px;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-      pointer-events: none;
-    }
-    .code-display {
-      min-height: 48px;
-      margin: 36px 0 36px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 24px;
-    }
-    .digit-slot {
-      position: relative;
-      width: 30px;
-      height: 44px;
-      color: #22252b;
-      font-size: 30px;
-      font-variant-numeric: tabular-nums;
-      line-height: 38px;
-    }
-    .digit-slot.active::after {
-      content: "";
-      position: absolute;
-      left: 4px;
-      right: 4px;
-      bottom: 0;
-      height: 2px;
-      border-radius: 1px;
-      background: #9fc9e9;
-    }
-    .keypad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-    .key {
-      min-width: 0;
-      height: 68px;
-      border: 0;
-      border-radius: 11px;
-      background: #ffffff;
-      color: #24262b;
-      font: inherit;
-      font-size: 22px;
-      font-weight: 400;
-      letter-spacing: 0;
-      cursor: pointer;
-      box-shadow: 0 1px 2px rgba(39, 45, 64, 0.04);
-      transition: background-color 120ms ease, transform 120ms ease;
-    }
-    .key:hover { background: #fafbff; }
-    .key:active { background: #e8edf7; transform: scale(0.985); }
-    .key:focus-visible { outline: 3px solid rgba(80, 154, 214, 0.32); outline-offset: 2px; }
-    .key:disabled { cursor: default; opacity: 0.62; transform: none; }
-    .key-zero { grid-column: 2; }
-    .key-delete { grid-column: 3; background: transparent; box-shadow: none; }
-    .key-delete:hover { background: rgba(255, 255, 255, 0.42); }
-    .privacy-note { margin: 46px auto 0; color: #626a79; font-size: 13px; line-height: 1.65; }
-    .privacy-note span { display: block; }
-    @media (max-width: 640px) {
-      main { padding: 34px 16px; }
-      .login-shell h1 { font-size: 27px; }
-      .subtitle { margin-top: 14px; font-size: 15px; }
-      .login-form { width: 100%; }
-      .code-display { margin: 30px 0; gap: 16px; }
-      .digit-slot { width: 26px; height: 40px; font-size: 27px; line-height: 34px; }
-      .keypad { gap: 10px; }
-      .key { height: 58px; border-radius: 9px; font-size: 20px; }
-      .privacy-note { margin-top: 34px; font-size: 12px; }
-    }
-    @media (prefers-reduced-motion: reduce) { .key { transition: none; } }
-  </style>
-</head>
-<body><main>${body}</main>${script ? `<script>${script}</script>` : ""}</body>
-</html>`;
+  return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-store"><title>MijiaFlow / \u7C73\u5BB6\u6D41</title><style>${STYLE}</style></head><body><main>${body}</main>${script ? `<script>${script}</script>` : ""}</body></html>`;
 }
-function form(action) {
-  return page(`<section class="login-shell" aria-labelledby="login-title">
-  <h1 id="login-title">MijiaFlow / \u7C73\u5BB6\u6D41</h1>
-  <p class="subtitle" id="login-help">\u8F93\u5165\u7C73\u5BB6\u81EA\u52A8\u5316\u6781\u5BA2\u7248 6 \u4F4D\u6570\u5B57\u767B\u5F55\u7801</p>
-  <form class="login-form" id="pairing-form" method="post" action="${action}" autocomplete="off">
-    <input class="code-input" id="passcode" name="passcode" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" aria-label="6 \u4F4D\u6570\u5B57\u767B\u5F55\u7801" aria-describedby="login-help" tabindex="-1" required>
-    <div class="code-display" role="status" aria-label="\u767B\u5F55\u7801\u8F93\u5165\u8FDB\u5EA6">
-      <span class="digit-slot" data-slot="0"></span>
-      <span class="digit-slot" data-slot="1"></span>
-      <span class="digit-slot" data-slot="2"></span>
-      <span class="digit-slot" data-slot="3"></span>
-      <span class="digit-slot" data-slot="4"></span>
-      <span class="digit-slot" data-slot="5"></span>
-    </div>
-    <div class="keypad" role="group" aria-label="\u6570\u5B57\u952E\u76D8">
-      <button class="key" type="button" data-digit="1">1</button>
-      <button class="key" type="button" data-digit="2">2</button>
-      <button class="key" type="button" data-digit="3">3</button>
-      <button class="key" type="button" data-digit="4">4</button>
-      <button class="key" type="button" data-digit="5">5</button>
-      <button class="key" type="button" data-digit="6">6</button>
-      <button class="key" type="button" data-digit="7">7</button>
-      <button class="key" type="button" data-digit="8">8</button>
-      <button class="key" type="button" data-digit="9">9</button>
-      <button class="key key-zero" type="button" data-digit="0">0</button>
-      <button class="key key-delete" type="button" data-delete>\u5220\u9664</button>
-    </div>
-  </form>
-  <p class="privacy-note"><span>\u767B\u5F55\u7801\u4EC5\u7528\u4E8E\u672C\u6B21\u672C\u673A\u4F1A\u8BDD\uFF0C\u4E0D\u4F1A\u5199\u5165\u65E5\u5FD7\u6216\u4ED3\u5E93</span><span>\u63D0\u4EA4\u540E\u5982\u9700\u91CD\u8BD5\uFF0C\u8BF7\u5728 Codex \u4E2D\u91CD\u65B0\u5F00\u59CB\u4F1A\u8BDD</span></p>
-</section>`, PAIRING_FORM_SCRIPT);
+function headers(script = "") {
+  return { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store, max-age=0", Pragma: "no-cache", "Content-Security-Policy": `default-src 'none'; style-src 'unsafe-inline'; script-src ${script ? `'sha256-${scriptHash(script)}'` : "'none'"}; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'`, "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", "Permissions-Policy": "camera=(), microphone=(), geolocation=()" };
 }
-function respond(response, status, html) {
-  response.writeHead(status, {
-    "Content-Type": "text/html; charset=utf-8",
-    "Cache-Control": "no-store, max-age=0",
-    Pragma: "no-cache",
-    "Content-Security-Policy": `default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-${PAIRING_FORM_SCRIPT_HASH}'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'`,
-    "X-Content-Type-Options": "nosniff",
-    "Referrer-Policy": "no-referrer",
-    "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
-  });
+function respond(response, status, html, script = "") {
+  response.writeHead(status, headers(script));
   response.end(html);
 }
-function hasValidPostSource(request, port) {
-  const expectedHost = `127.0.0.1:${port}`;
-  const expectedOrigin = `http://${expectedHost}`;
-  const origin = request.headers.origin;
-  if (origin === expectedOrigin) return true;
-  if (origin !== void 0 && origin !== "null") return false;
-  return request.headers.host === expectedHost;
+function respondJson(response, status, value) {
+  response.writeHead(status, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store, max-age=0", "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'", "X-Content-Type-Options": "nosniff" });
+  response.end(JSON.stringify(value));
 }
-function authenticationFailurePage(error51) {
-  const code = error51 instanceof MijiaFlowError ? error51.code : "";
-  if (code === "GATEWAY_REJECTED") {
-    return page("<h1>\u7F51\u5173\u62D2\u7EDD\u4E86\u767B\u5F55\u7801</h1><p>\u8BF7\u91CD\u65B0\u83B7\u53D6\u5E76\u786E\u8BA4\u7C73\u5BB6\u4E2D\u67A2\u6781\u5BA2\u7248\u767B\u5F55\u7801\u3002</p>");
-  }
-  if (code === "HANDSHAKE_TIMEOUT") {
-    return page("<h1>\u8BA4\u8BC1\u8D85\u65F6</h1><p>\u8BF7\u786E\u8BA4\u7F51\u5173\u5728\u7EBF\u540E\u5728 Codex \u4E2D\u91CD\u65B0\u5F00\u59CB\u4F1A\u8BDD\u3002</p>");
-  }
-  if ([
-    "AUTHENTICATION_FAILED",
-    "INVALID_FRAME",
-    "INVALID_HANDSHAKE",
-    "INVALID_PAKE_POINT",
-    "INVALID_PAKE_PROOF",
-    "PAKE_FAILED"
-  ].includes(code)) {
-    return page("<h1>\u534F\u8BAE\u6821\u9A8C\u5931\u8D25</h1><p>\u8BF7\u8FD4\u56DE Codex \u67E5\u770B\u517C\u5BB9\u6027\u8BCA\u65AD\u3002</p>");
-  }
-  if (code === "CONNECTION_FAILED" || code === "SESSION_CLOSED") {
-    return page("<h1>\u7F51\u5173\u8FDE\u63A5\u5DF2\u4E2D\u65AD</h1><p>\u8BF7\u68C0\u67E5\u5C40\u57DF\u7F51\u8FDE\u63A5\u540E\u5728 Codex \u4E2D\u91CD\u65B0\u5F00\u59CB\u4F1A\u8BDD\u3002</p>");
-  }
-  return page("<h1>\u8FDE\u63A5\u5931\u8D25</h1><p>\u8BF7\u5728 Codex \u4E2D\u91CD\u65B0\u5F00\u59CB\u4F1A\u8BDD\u5E76\u68C0\u67E5\u767B\u5F55\u7801\u3002</p>");
+function validSource(request, port) {
+  return request.headers.host === `127.0.0.1:${port}` && (!request.headers.origin || request.headers.origin === `http://127.0.0.1:${port}` || request.headers.origin === "null");
 }
 var PairingServer = class {
   #token = randomBytes6(32).toString("base64url");
   #expiresAt;
   #authenticate;
   #onFailure;
-  #resultTtlMs;
+  #getState;
   #server;
   #consumed = false;
   #port;
   #expiryTimer;
-  #resultTimer;
-  #result;
-  #failureNotified = false;
-  constructor(authenticate, onFailure = () => void 0, ttlMs = 15 * 6e4, resultTtlMs = DEFAULT_RESULT_TTL_MS) {
+  constructor(authenticate, onFailure = () => void 0, options = {}) {
     this.#authenticate = authenticate;
     this.#onFailure = onFailure;
-    this.#expiresAt = Date.now() + ttlMs;
-    this.#resultTtlMs = resultTtlMs;
+    this.#getState = options.getState ?? (() => ({}));
+    this.#expiresAt = Date.now() + (options.ttlMs ?? PAIRING_TTL_MS);
   }
   async start() {
-    if (this.#server) {
-      throw new MijiaFlowError("Pairing server is already running", "INVALID_SESSION_STATE");
-    }
     this.#server = createServer((request, response) => {
       void this.#handle(request, response);
     });
@@ -65120,60 +64953,56 @@ var PairingServer = class {
       this.#server.listen(0, "127.0.0.1", () => resolve2());
     });
     const address = this.#server.address();
-    if (!address || typeof address === "string") {
-      this.close();
-      throw new MijiaFlowError("Could not allocate a loopback pairing port", "PAIRING_SERVER_FAILED");
-    }
+    if (!address || typeof address === "string") throw new MijiaFlowError("Could not allocate a loopback pairing port", "PAIRING_SERVER_FAILED");
     this.#port = address.port;
     this.#expiryTimer = setTimeout(() => {
       this.close();
-      this.#notifyFailure();
+      this.#onFailure();
     }, Math.max(0, this.#expiresAt - Date.now()));
     const pairingUrl = `http://127.0.0.1:${this.#port}/pair/${this.#token}`;
-    return { pairingUrl, expiresAt: new Date(this.#expiresAt).toISOString() };
+    return { pairingUrl, workbenchUrl: pairingUrl, expiresAt: new Date(this.#expiresAt).toISOString() };
   }
   close() {
-    if (this.#expiryTimer) {
-      clearTimeout(this.#expiryTimer);
-      this.#expiryTimer = void 0;
-    }
-    if (this.#resultTimer) {
-      clearTimeout(this.#resultTimer);
-      this.#resultTimer = void 0;
-    }
+    if (this.#expiryTimer) clearTimeout(this.#expiryTimer);
+    this.#expiryTimer = void 0;
     this.#server?.close();
     this.#server = void 0;
   }
   async #handle(request, response) {
-    const pathname = `/pair/${this.#token}`;
-    if (Date.now() >= this.#expiresAt || request.url !== pathname) {
-      respond(response, 410, page("<h1>\u914D\u5BF9\u94FE\u63A5\u5DF2\u5931\u6548</h1><p>\u8BF7\u5728 Codex \u4E2D\u91CD\u65B0\u5F00\u59CB\u4F1A\u8BDD\u3002</p>"));
+    const base = `/pair/${this.#token}`;
+    const pathname = new URL(request.url || "/", `http://127.0.0.1:${this.#port || 0}`).pathname;
+    if (pathname !== base && pathname !== `${base}/state`) {
+      respond(response, 404, page("<section class=login><h1>\u9875\u9762\u4E0D\u5B58\u5728</h1></section>"));
       return;
     }
-    if (this.#consumed) {
-      if (request.method === "GET" && this.#result) {
-        respond(response, this.#result.status, this.#result.html);
+    if (!validSource(request, this.#port)) {
+      respond(response, 403, page("<section class=login><h1>\u8BF7\u6C42\u6765\u6E90\u65E0\u6548</h1><p>\u8BF7\u4EC5\u4F7F\u7528\u539F\u914D\u5BF9\u9875\u9762\u3002</p></section>"));
+      return;
+    }
+    if (pathname === `${base}/state`) {
+      if (request.method !== "GET") {
+        response.writeHead(405, { Allow: "GET" });
+        response.end();
         return;
       }
-      respond(response, 410, page("<h1>\u914D\u5BF9\u94FE\u63A5\u5DF2\u5931\u6548</h1><p>\u8BF7\u5728 Codex \u4E2D\u91CD\u65B0\u5F00\u59CB\u4F1A\u8BDD\u3002</p>"));
+      respondJson(response, 200, this.#getState());
+      return;
+    }
+    if (Date.now() >= this.#expiresAt && !this.#consumed) {
+      respond(response, 410, page("<section class=login><h1>\u914D\u5BF9\u94FE\u63A5\u5DF2\u5931\u6548</h1><p>\u8BF7\u91CD\u65B0\u5728 Codex \u4E2D\u5F00\u59CB\u4F1A\u8BDD\u3002</p></section>"));
       return;
     }
     if (request.method === "GET") {
-      respond(response, 200, form(pathname));
+      respond(response, 200, this.#consumed ? this.#workbench() : this.#form(), this.#consumed ? WORKBENCH_SCRIPT : PAIRING_SCRIPT);
       return;
     }
-    if (request.method !== "POST") {
-      response.writeHead(405, { Allow: "GET, POST", "Cache-Control": "no-store" });
+    if (request.method !== "POST" || this.#consumed) {
+      response.writeHead(410, { "Cache-Control": "no-store" });
       response.end();
       return;
     }
-    if (!hasValidPostSource(request, this.#port)) {
-      respond(response, 403, page("<h1>\u8BF7\u6C42\u6765\u6E90\u65E0\u6548</h1><p>\u8BF7\u4EC5\u4F7F\u7528\u539F\u914D\u5BF9\u9875\u9762\u63D0\u4EA4\u767B\u5F55\u7801\u3002</p>"));
-      return;
-    }
-    const contentType = request.headers["content-type"]?.split(";", 1)[0];
-    if (contentType !== "application/x-www-form-urlencoded") {
-      respond(response, 415, page("<h1>\u8BF7\u6C42\u683C\u5F0F\u65E0\u6548</h1>"));
+    if (request.headers["content-type"]?.split(";", 1)[0] !== "application/x-www-form-urlencoded") {
+      respond(response, 415, page("<section class=login><h1>\u8BF7\u6C42\u683C\u5F0F\u65E0\u6548</h1></section>"));
       return;
     }
     const chunks = [];
@@ -65182,7 +65011,7 @@ var PairingServer = class {
       const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
       length += buffer.length;
       if (length > MAX_BODY_BYTES) {
-        respond(response, 413, page("<h1>\u8BF7\u6C42\u8FC7\u5927</h1>"));
+        respond(response, 413, page("<section class=login><h1>\u8BF7\u6C42\u8FC7\u5927</h1></section>"));
         return;
       }
       chunks.push(buffer);
@@ -65191,55 +65020,41 @@ var PairingServer = class {
     const passcode = new URLSearchParams(body.toString("utf8")).get("passcode");
     body.fill(0);
     if (!passcode || !/^\d{6}$/.test(passcode)) {
-      respond(response, 400, form(pathname));
+      respond(response, 400, this.#form(), PAIRING_SCRIPT);
       return;
     }
     this.#consumed = true;
-    if (this.#expiryTimer) {
-      clearTimeout(this.#expiryTimer);
-      this.#expiryTimer = void 0;
-    }
-    this.#result = {
-      status: 202,
-      html: page("<h1>\u6B63\u5728\u8FDE\u63A5</h1><p>\u8BF7\u4FDD\u6301\u6B64\u9875\u9762\u6253\u5F00\uFF0CMijiaFlow \u6B63\u5728\u4E0E\u7F51\u5173\u5EFA\u7ACB\u5B89\u5168\u4F1A\u8BDD\u3002</p>")
-    };
+    if (this.#expiryTimer) clearTimeout(this.#expiryTimer);
     try {
       await this.#authenticate(passcode);
-      this.#result = {
-        status: 200,
-        html: page("<h1>\u8FDE\u63A5\u5DF2\u5EFA\u7ACB</h1><p>\u53EF\u4EE5\u5173\u95ED\u6B64\u9875\u9762\u5E76\u8FD4\u56DE Codex\u3002</p>")
-      };
-      respond(response, this.#result.status, this.#result.html);
-      this.#retainResult();
-    } catch (error51) {
-      this.#result = { status: 401, html: authenticationFailurePage(error51) };
-      respond(response, this.#result.status, this.#result.html);
-      this.#retainResult(() => this.#notifyFailure());
+    } catch {
+      this.#onFailure();
+      response.writeHead(303, { Location: base, "Cache-Control": "no-store" });
+      response.end();
+      return;
     }
+    response.writeHead(303, { Location: base, "Cache-Control": "no-store" });
+    response.end();
   }
-  #retainResult(afterClose) {
-    if (this.#expiryTimer) {
-      clearTimeout(this.#expiryTimer);
-      this.#expiryTimer = void 0;
-    }
-    this.#resultTimer = setTimeout(() => {
-      this.#resultTimer = void 0;
-      this.close();
-      afterClose?.();
-    }, this.#resultTtlMs);
+  #form() {
+    return page(`<section class="login"><h1>MijiaFlow / \u7C73\u5BB6\u6D41</h1><p>\u8F93\u5165\u7C73\u5BB6\u81EA\u52A8\u5316\u6781\u5BA2\u7248 6 \u4F4D\u6570\u5B57\u767B\u5F55\u7801</p><form class="login-form" id="pairing-form" method="post" action="/pair/${this.#token}" autocomplete="off"><input class="code-input" id="passcode" name="passcode" type="password" inputmode="numeric" maxlength="6" required><div class="code-display" aria-label="\u767B\u5F55\u7801\u8F93\u5165\u8FDB\u5EA6"><span class="digit-slot" data-slot="0"></span><span class="digit-slot" data-slot="1"></span><span class="digit-slot" data-slot="2"></span><span class="digit-slot" data-slot="3"></span><span class="digit-slot" data-slot="4"></span><span class="digit-slot" data-slot="5"></span></div><div class="keypad"><button class="key" type="button" data-digit="1">1</button><button class="key" type="button" data-digit="2">2</button><button class="key" type="button" data-digit="3">3</button><button class="key" type="button" data-digit="4">4</button><button class="key" type="button" data-digit="5">5</button><button class="key" type="button" data-digit="6">6</button><button class="key" type="button" data-digit="7">7</button><button class="key" type="button" data-digit="8">8</button><button class="key" type="button" data-digit="9">9</button><button class="key" type="button" data-digit="0">0</button><button class="key key-delete" type="button" data-delete>\u5220\u9664</button></div></form><p class="privacy">\u767B\u5F55\u7801\u4EC5\u7528\u4E8E\u672C\u6B21\u672C\u673A\u4F1A\u8BDD\uFF0C\u4E0D\u4F1A\u5199\u5165\u65E5\u5FD7\u6216\u4ED3\u5E93</p></section>`, PAIRING_SCRIPT);
   }
-  #notifyFailure() {
-    if (this.#failureNotified) return;
-    this.#failureNotified = true;
-    this.#onFailure();
+  #workbench() {
+    return page(`<section class="workbench" id="workbench" data-state="/pair/${this.#token}/state"><div class="top"><div><h1>MijiaFlow \u5DE5\u4F5C\u53F0</h1><p>\u5B9E\u65F6\u67E5\u770B\u4F1A\u8BDD\u3001\u8BFB\u53D6\u3001\u8BA1\u5212\u3001\u5907\u4EFD\u548C\u53D8\u66F4\u9A8C\u8BC1\u8FDB\u5EA6</p></div><span class="badge" id="badge">\u8FDE\u63A5\u4E2D</span></div><div class="panel"><h2>\u4F1A\u8BDD</h2><p id="session">\u6B63\u5728\u8BFB\u53D6\u72B6\u6001...</p><div class="operation" id="operation" hidden></div><pre class="diff" id="diff" hidden></pre><div class="meta">\u6700\u540E\u66F4\u65B0 <span id="updated">--:--:--</span> \xB7 \u672C\u9875\u9762\u4EC5\u4F9B\u67E5\u770B\uFF0C\u6240\u6709\u5199\u5165\u4ECD\u7531 MCP \u5DE5\u5177\u6267\u884C</div></div></section>`, WORKBENCH_SCRIPT);
   }
 };
 
 // mcp/src/session/session-manager.ts
 var SessionManager = class {
   #active;
+  #lastFailure;
+  #getWorkbenchState;
+  constructor(getWorkbenchState = () => this.status()) {
+    this.#getWorkbenchState = getWorkbenchState;
+  }
   async begin(baseUrl) {
     this.end();
+    this.#lastFailure = void 0;
     const { probe, target } = await probeGateway(baseUrl);
     const client = new GatewayClient(target);
     let pairing;
@@ -65249,7 +65064,8 @@ var SessionManager = class {
           await client.start();
           await client.authenticate(passcode);
         },
-        () => this.#discard(client)
+        () => this.#discard(client),
+        { getState: () => this.#getWorkbenchState() }
       );
       const pairingInfo = await pairing.start();
       const active = {
@@ -65257,7 +65073,8 @@ var SessionManager = class {
         probe,
         client,
         api: new GatewayApi(client),
-        pairing
+        pairing,
+        pairingExpiresAt: pairingInfo.expiresAt
       };
       this.#active = active;
       return {
@@ -65272,6 +65089,22 @@ var SessionManager = class {
       client.close();
       throw error51;
     }
+  }
+  status() {
+    const active = this.#active;
+    if (!active) {
+      return this.#lastFailure ?? { state: "none" };
+    }
+    const clientState = active.client.state;
+    const state = clientState === "ready" ? "ready" : clientState === "closed" ? "failed" : clientState === "idle" ? "awaiting-passcode" : "authenticating";
+    return {
+      state,
+      sessionId: active.id,
+      baseUrl: active.probe.baseUrl,
+      mode: active.probe.mode,
+      writeDisabledReasons: active.probe.writeDisabledReasons,
+      ...state === "awaiting-passcode" ? { pairingExpiresAt: active.pairingExpiresAt } : {}
+    };
   }
   requireReady() {
     const active = this.#active;
@@ -65291,11 +65124,13 @@ var SessionManager = class {
   }
   end() {
     if (!this.#active) {
+      this.#lastFailure = void 0;
       return { ended: false };
     }
     this.#active.pairing.close();
     this.#active.client.close();
     this.#active = void 0;
+    this.#lastFailure = void 0;
     return { ended: true };
   }
   #discard(client) {
@@ -65303,9 +65138,7 @@ var SessionManager = class {
       client.close();
       return;
     }
-    this.#active.pairing.close();
     this.#active.client.close();
-    this.#active = void 0;
   }
 };
 
@@ -65329,16 +65162,50 @@ var AsyncMutex = class {
 };
 
 // mcp/src/service.ts
+var SECRET_KEYS = /* @__PURE__ */ new Set([
+  "passcode",
+  "planToken",
+  "backupReceipt",
+  "confirmation",
+  "rollbackConfirmation",
+  "payload",
+  "path",
+  "record",
+  "recordBinding",
+  "deviceId",
+  "deviceIds",
+  "value"
+]);
+function safeValue(value, key) {
+  if (key && SECRET_KEYS.has(key)) return "[\u5DF2\u9690\u85CF]";
+  if (typeof value === "string") return "[\u5DF2\u9690\u85CF]";
+  if (Array.isArray(value)) return value.slice(0, 20).map((item) => safeValue(item));
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).slice(0, 30).map(([childKey, child]) => [childKey, safeValue(child, childKey)]));
+  }
+  return value;
+}
+function safeDiff(diff) {
+  if (!diff) return void 0;
+  return diff.slice(0, 100).map((entry) => ({
+    path: entry.path,
+    ...entry.before !== void 0 ? { before: safeValue(entry.before) } : {},
+    ...entry.after !== void 0 ? { after: safeValue(entry.after) } : {}
+  }));
+}
 var MijiaFlowService = class {
-  #sessions = new SessionManager();
-  #transactions = new TransactionManager();
+  #sessions = new SessionManager(() => this.#workbenchSnapshot());
+  #transactions = new TransactionManager((progress) => this.#updateOperation(progress));
   #lifecycle = new AsyncMutex();
+  #operation;
+  #updatedAt = (/* @__PURE__ */ new Date()).toISOString();
   async probe(baseUrl) {
     return (await probeGateway(baseUrl)).probe;
   }
   async beginSession(baseUrl) {
     return this.#lifecycle.runExclusive(async () => {
       this.#transactions.clear();
+      this.#operation = void 0;
       return this.#sessions.begin(baseUrl);
     });
   }
@@ -65346,20 +65213,41 @@ var MijiaFlowService = class {
     return this.#lifecycle.runExclusive(() => {
       const result = this.#sessions.end();
       this.#transactions.clear();
+      this.#operation = void 0;
+      this.#touch();
       return result;
     });
   }
+  async sessionStatus() {
+    return this.#lifecycle.runExclusive(() => this.#sessions.status());
+  }
+  async workbenchStatus() {
+    return this.#lifecycle.runExclusive(() => this.#workbenchSnapshot());
+  }
+  #workbenchSnapshot() {
+    const currentSession = this.#sessions.status();
+    const session = {
+      state: currentSession.state,
+      ...currentSession.mode ? { mode: currentSession.mode } : {},
+      ...currentSession.writeDisabledReasons ? { writeDisabledReasons: currentSession.writeDisabledReasons } : {}
+    };
+    return {
+      updatedAt: this.#updatedAt,
+      session,
+      ...this.#operation ? { operation: this.#operation } : {}
+    };
+  }
   async read(resource, filters) {
-    return this.#lifecycle.runExclusive(() => this.#sessions.requireReady().api.read(resource, filters));
+    return this.#runOperation("read", `\u8BFB\u53D6 ${resource}`, () => this.#sessions.requireReady().api.read(resource, filters));
   }
   async planChange(operation, payload) {
-    return this.#lifecycle.runExclusive(() => this.#transactions.plan(this.#sessions.requireWritable(), operation, payload));
+    return this.#runOperation("plan", `\u751F\u6210 ${operation} \u53D8\u66F4\u8BA1\u5212`, () => this.#transactions.plan(this.#sessions.requireWritable(), operation, payload));
   }
   async createBackup(fileName, outputDir, cloud) {
-    return this.#lifecycle.runExclusive(() => this.#transactions.createBackup(this.#sessions.requireReady(), fileName, outputDir, cloud));
+    return this.#runOperation("backup", "\u521B\u5EFA\u5E76\u6821\u9A8C\u5907\u4EFD", () => this.#transactions.createBackup(this.#sessions.requireReady(), fileName, outputDir, cloud));
   }
   async applyChange(planToken, backupReceipt, confirmation2) {
-    return this.#lifecycle.runExclusive(() => this.#transactions.apply(
+    return this.#runOperation("apply", "\u6267\u884C\u5DF2\u786E\u8BA4\u7684\u53D8\u66F4", () => this.#transactions.apply(
       this.#sessions.requireWritable(),
       planToken,
       backupReceipt,
@@ -65367,7 +65255,52 @@ var MijiaFlowService = class {
     ));
   }
   async rollback(changeId, confirmation2) {
-    return this.#lifecycle.runExclusive(() => this.#transactions.rollback(this.#sessions.requireWritable(), changeId, confirmation2));
+    return this.#runOperation("rollback", "\u56DE\u6EDA\u5E76\u6821\u9A8C\u53D8\u66F4", () => this.#transactions.rollback(this.#sessions.requireWritable(), changeId, confirmation2));
+  }
+  async #runOperation(stage, summary, action) {
+    return this.#lifecycle.runExclusive(async () => {
+      this.#operation = { stage, state: "running", startedAt: (/* @__PURE__ */ new Date()).toISOString(), summary };
+      this.#touch();
+      try {
+        const result = await action();
+        const safeResult = result && typeof result === "object" && !Array.isArray(result) ? safeValue(result) : void 0;
+        this.#operation = {
+          ...this.#operation,
+          state: "succeeded",
+          finishedAt: (/* @__PURE__ */ new Date()).toISOString(),
+          ...safeResult ? { result: safeResult } : {}
+        };
+        this.#touch();
+        return result;
+      } catch (error51) {
+        const normalized = asMijiaFlowError(error51);
+        this.#operation = {
+          ...this.#operation,
+          state: "failed",
+          finishedAt: (/* @__PURE__ */ new Date()).toISOString(),
+          errorCode: normalized.code
+        };
+        this.#touch();
+        throw error51;
+      }
+    });
+  }
+  #updateOperation(progress) {
+    const current = this.#operation;
+    const startedAt = current?.stage === progress.stage ? current.startedAt : (/* @__PURE__ */ new Date()).toISOString();
+    const operation = { stage: progress.stage, state: progress.state, startedAt };
+    if (progress.state !== "running") operation.finishedAt = (/* @__PURE__ */ new Date()).toISOString();
+    const summary = progress.summary ?? current?.summary;
+    if (summary) operation.summary = summary;
+    const diff = progress.diff ? safeDiff(progress.diff) : current?.diff;
+    if (diff) operation.diff = diff;
+    if (progress.result) operation.result = safeValue(progress.result);
+    if (progress.errorCode) operation.errorCode = progress.errorCode;
+    this.#operation = operation;
+    this.#touch();
+  }
+  #touch() {
+    this.#updatedAt = (/* @__PURE__ */ new Date()).toISOString();
   }
 };
 
@@ -65425,6 +65358,26 @@ server.registerTool(
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   },
   () => run(() => service.endSession())
+);
+server.registerTool(
+  "mijia_session_status",
+  {
+    title: "Check Mijia session status",
+    description: "Report the current session state (none, awaiting-passcode, authenticating, ready, or failed) without touching the gateway.",
+    inputSchema: external_exports.object({}).strict(),
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+  },
+  () => run(() => service.sessionStatus())
+);
+server.registerTool(
+  "mijia_workbench_status",
+  {
+    title: "Read Mijia workbench status",
+    description: "Read the loopback workbench snapshot with session state and redacted recent operation progress.",
+    inputSchema: external_exports.object({}).strict(),
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+  },
+  () => run(() => service.workbenchStatus())
 );
 server.registerTool(
   "mijia_read",
