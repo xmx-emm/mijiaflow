@@ -1,0 +1,4 @@
+# Force LF everywhere so the esbuild bundle (which embeds docs/*.md as text)
+# is byte-identical across Windows and Linux checkouts; CI diffs mcp/dist.
+* text=auto eol=lf
+*.tgz binary
