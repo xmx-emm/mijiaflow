@@ -1,6 +1,6 @@
 # MCP API Reference
 
-MijiaFlow exposes ten tools, three prompts, and four guide resources. There is
+MijiaFlow exposes ten tools, three prompts, and five guide resources. There is
 no generic RPC, arbitrary method, shell, or `callAPI` interface. Tool errors use
 MCP error results and redact passcodes, session keys, pairing tokens, and
 decrypted protocol payloads where they may contain secrets. Gateway-provided
@@ -275,6 +275,7 @@ they are available to any client regardless of how the package was installed.
 | --- | --- |
 | `mijiaflow://guide/tool-workflows` | Read filters, allowlisted operations, and opaque token handling. |
 | `mijiaflow://guide/write-transaction` | The mandatory plan, backup, confirm, apply, verify, and rollback sequence. |
+| `mijiaflow://guide/node-catalog` | The raw graph contract, node type inventory, and evidence-based composition procedure. |
 | `mijiaflow://guide/browser-workflow` | Optional guidance for browser-capable agents. |
 | `mijiaflow://guide/security` | Trust boundaries, credential lifecycle, and enforced mutation gates. |
 

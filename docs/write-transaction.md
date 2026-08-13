@@ -13,7 +13,9 @@ rejects shortcuts.
 - The change is expressible as one allowlisted operation (see
   [tool-workflows](tool-workflows.md)). A natural-language description is not
   a raw graph: API graph writes require a complete `{ id, nodes, cfg }`
-  object. Never invent node schemas.
+  object. Never invent node shapes; compose new graphs only through the
+  evidence-based procedure in the [node catalog](node-catalog.md), preferring
+  clone-and-modify of an observed rule.
 
 ## Sequence
 

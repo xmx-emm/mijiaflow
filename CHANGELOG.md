@@ -25,6 +25,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - A stdio smoke test that boots the committed bundle through the MCP client
   SDK and checks tools, prompts, resources, and error hints.
 - `docs/write-transaction.md` documenting the guarded write sequence.
+- `docs/node-catalog.md` (also served as `mijiaflow://guide/node-catalog`)
+  documenting the raw graph contract, the v1.6.1 node type inventory, and the
+  evidence-based procedure for composing new graphs from observed node shapes.
 
 ### Changed
 

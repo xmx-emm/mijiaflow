@@ -47,6 +47,7 @@ describe("bundled stdio server", () => {
       const resources = await client.listResources();
       expect(resources.resources.map((resource) => resource.uri).sort()).toEqual([
         "mijiaflow://guide/browser-workflow",
+        "mijiaflow://guide/node-catalog",
         "mijiaflow://guide/security",
         "mijiaflow://guide/tool-workflows",
         "mijiaflow://guide/write-transaction",

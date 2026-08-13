@@ -247,7 +247,7 @@ server.registerTool(
       operation: z.string().min(1)
         .describe("One of: set_graph, delete_graph, set_graph_config, set_graph_enabled, create_variable, set_variable_value, set_variable_config, delete_variable"),
       payload: z.unknown()
-        .describe("Complete closed-schema payload for the operation; see the mijiaflow://guide/tool-workflows resource. Graph imports need the full { id, nodes, cfg } object."),
+        .describe("Complete closed-schema payload for the operation; see the mijiaflow://guide/tool-workflows resource. Graph imports need the full { id, nodes, cfg } object composed per mijiaflow://guide/node-catalog."),
     }).strict(),
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false },
   },

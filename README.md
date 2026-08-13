@@ -159,8 +159,8 @@ workflows without external documentation:
 - **Prompts:** `mijia_audit` (read-only audit), `mijia_guarded_change` (full
   guarded write), and `mijia_backup` (verified backup).
 - **Resources:** `mijiaflow://guide/tool-workflows`,
-  `mijiaflow://guide/write-transaction`, `mijiaflow://guide/browser-workflow`,
-  and `mijiaflow://guide/security`.
+  `mijiaflow://guide/write-transaction`, `mijiaflow://guide/node-catalog`,
+  `mijiaflow://guide/browser-workflow`, and `mijiaflow://guide/security`.
 - **Instructions:** the server's `initialize` result summarizes the whole
   probe → pair → read → plan → backup → confirm → apply → rollback flow.
 

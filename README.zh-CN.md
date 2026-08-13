@@ -144,8 +144,8 @@ MijiaFlow 不会把自然语言猜测直接转换成本地 API 写入。API 路�
 - **Prompts：** `mijia_audit`（只读审计）、`mijia_guarded_change`（完整受保护
   写入）、`mijia_backup`（可校验备份）。
 - **Resources：** `mijiaflow://guide/tool-workflows`、
-  `mijiaflow://guide/write-transaction`、`mijiaflow://guide/browser-workflow`、
-  `mijiaflow://guide/security`。
+  `mijiaflow://guide/write-transaction`、`mijiaflow://guide/node-catalog`、
+  `mijiaflow://guide/browser-workflow`、`mijiaflow://guide/security`。
 - **Instructions：** 服务器在 `initialize` 结果中概括完整流程：探测 → 配对 →
   读取 → 计划 → 备份 → 确认 → 执行 → 回滚。
 

@@ -18,7 +18,7 @@ internally polls for and binds a new matching record before downloading it.
 
 ## Change Operations
 
-- `set_graph`: complete `{id, nodes, cfg}`; require `cfg.id === id` and boolean `cfg.enable`. Each node requires a unique alphanumeric `id`, a known v1.6.1 `type`, object `props/inputs/outputs/cfg`, and integer `cfg.version`. Every output connection uses `destinationNodeId.destinationInput` and must resolve inside the graph.
+- `set_graph`: complete `{id, nodes, cfg}`; require `cfg.id === id` and boolean `cfg.enable`. Each node requires a unique alphanumeric `id`, a known v1.6.1 `type`, object `props/inputs/outputs/cfg`, and integer `cfg.version`. Every output connection uses `destinationNodeId.destinationInput` and must resolve inside the graph. Compose new graphs only from node shapes observed on the target gateway; see [node-catalog.md](node-catalog.md).
 - `delete_graph`: `{id}`.
 - `set_graph_config`: `{id, cfg}`; require a complete config, `cfg.id === id`, and boolean `cfg.enable`.
 - `set_graph_enabled`: `{id, enabled}`.
