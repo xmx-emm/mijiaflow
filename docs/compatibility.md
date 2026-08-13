@@ -51,3 +51,41 @@ A new pair should remain read-only until maintainers have:
 5. Added the exact pair to the allowlist and this matrix.
 
 Do not infer compatibility from a newer version number alone.
+
+## Real-Device Acceptance Checklist
+
+The automated suite covers protocol and transaction behavior against a local
+fake gateway; it does not replace one guarded pass against real hardware.
+Run this checklist against a physical gateway before trusting a release for
+write operations, and record the results (date, firmware pair, outcomes,
+non-secret error codes) in this file. Use a disposable automation and variable,
+not production rules.
+
+1. **Probe:** `mijia_probe` reports the expected frontend/protocol pair and
+   mode; an intentionally wrong LAN address fails with `TARGET_UNREACHABLE`.
+2. **Pairing:** `mijia_begin_session` opens the keypad page on `127.0.0.1`; a
+   wrong passcode leads to a `failed` status and a fresh session is required; a
+   correct passcode reaches `ready` and the page turns into the workbench.
+3. **Reads:** each of `automations`, `devices`, `variables`, `logs`, and
+   `backups` returns plausible data; an `id` read returns one complete raw
+   graph.
+4. **Local backup:** `mijia_create_backup` (default directory) writes a file
+   whose digest verification passes and whose receipt is returned.
+5. **Cloud backup (write-compatible pair only):** `mijia_create_backup` with
+   `cloud: true` binds a new record, downloads it, and verifies content
+   digests.
+6. **Guarded write:** plan `set_graph_enabled` on the disposable automation,
+   back up, confirm with the exact phrase, apply, and check the readback state
+   in the native UI as well.
+7. **Concurrent-change guard:** create a plan, toggle the same automation in
+   the native UI, then apply; the tool must refuse with `CONCURRENT_CHANGE`
+   without writing.
+8. **Rollback:** roll the applied change back with the exact rollback phrase
+   and verify the restored state through `mijia_read` and the native UI.
+9. **End:** `mijia_end_session` closes the workbench page and invalidates the
+   session; a subsequent read fails with `SESSION_NOT_READY`.
+
+### Recorded Runs
+
+None yet for the current release. Add entries here as
+`YYYY-MM-DD - frontend/protocol - result summary`.
