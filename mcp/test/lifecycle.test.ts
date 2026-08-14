@@ -54,6 +54,8 @@ describe("session lifecycle primitives", () => {
     expect(initialBody).toContain("MijiaFlow / 米家流");
     expect(initialBody).toContain("输入米家自动化极客版 6 位数字登录码");
     expect(initialBody.match(/data-digit=/g)).toHaveLength(10);
+    expect(initialBody).toContain('class="key key-spacer"');
+    expect(initialBody).toMatch(/key-spacer[\s\S]*data-digit="0"[\s\S]*data-delete/);
     const inlineScript = initialBody.match(/<script>([\s\S]+)<\/script>/)?.[1];
     expect(inlineScript).toBeDefined();
     const scriptHash = createHash("sha256").update(inlineScript!).digest("base64");
